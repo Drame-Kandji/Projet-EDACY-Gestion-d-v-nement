@@ -24,16 +24,14 @@ class RoleSeeder extends Seeder
        (Permission::create([
         'name' => 'create-event',
        ])
-       );
+       )->assignRole('admin');
 
        (Permission::create([
         'name' => 'delete-event',
-       ]));
+       ]))->assignRole('admin');
 
        (Permission::create([
         'name' => 'update-event',
-       ]));
-
+       ]))->assignRole('admin');
     }
-
 }

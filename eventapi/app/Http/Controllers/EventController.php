@@ -73,20 +73,28 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-         Event::update([
-            $event->title => $request->title,
-            $event->description => $request->description,
-            $event->catogory_id=>$request->catogory,
-            $event->slug=>Str::slug($request->title),
-            $event->extrait => Str::limit($request->description,50),
-            $event->image =>$request->image,
-            $event->date_debut=>$request->date_debut,
-            $event->date_fin=>$request->date_fin,
-            $event->lieu=>$request->lieu,
-            $event->heure=>$request->heure
-         ]);
-       $event->save();
-       
+        try {
+            Event::update([
+                $event->title => $request->title,
+                $event->description => $request->description,
+                $event->catogory_id=>$request->catogory,
+                $event->slug=>Str::slug($request->title),
+                $event->extrait => Str::limit($request->description,50),
+                $event->image =>$request->image,
+                $event->date_debut=>$request->date_debut,
+                $event->date_fin=>$request->date_fin,
+                $event->lieu=>$request->lieu,
+                $event->heure=>$request->heure
+             ]);
+           $event->save();
+           return response()->json(
+            ['code'=>200,
+            'message'=>'mise a jour reussi avec succes'
+            ]
+           );
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
 
     }
 
@@ -95,6 +103,16 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-
+        try {
+            Event::destroy($event->id);
+            return response()->json(
+                [
+                    'code'=>200,
+                    'message'=>'suppression reusi ....'
+                ]
+            );
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

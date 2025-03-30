@@ -1,0 +1,164 @@
+<!-- login.component.html -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-600 p-4">
+  <div class="w-full max-w-md">
+    <!-- Carte avec effet de verre -->
+    <div class="relative bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+      <!-- Éléments décoratifs -->
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-400 rounded-full opacity-30"></div>
+      <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-purple-400 rounded-full opacity-30"></div>
+
+      <!-- Formulaire de connexion -->
+      <div class="relative p-8 z-10"
+           [style.opacity]="formOpacity"
+           [style.transform]="formTransform"
+           style="transition: all 0.6s ease-out">
+
+        <!-- Logo et en-tête -->
+        <div class="text-center mb-8">
+          <div class="flex justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h1 class="text-3xl font-bold text-gray-800">Gestion des Événements</h1>
+          <p class="text-gray-600 mt-2">Connectez-vous pour gérer vos événements</p>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="loginError"
+             class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm animate-pulse">
+          {{ loginError }}
+        </div>
+
+        <!-- Formulaire -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Champ Email -->
+          <div class="mb-6 group">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Adresse Email</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="votre@email.com"
+                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                [ngClass]="{'border-red-500 ring-1 ring-red-500': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
+              >
+            </div>
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
+              <div *ngIf="loginForm.get('email')?.errors?.['required']">L'email est requis.</div>
+              <div *ngIf="loginForm.get('email')?.errors?.['email']">Veuillez entrer une adresse email valide.</div>
+            </div>
+          </div>
+
+          <!-- Champ Mot de passe -->
+          <div class="mb-6 group">
+            <div class="flex justify-between items-center mb-1">
+              <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+              <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors">Mot de passe oublié?</a>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <input
+                id="password"
+                [type]="isPasswordVisible ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="••••••••"
+                class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                [ngClass]="{'border-red-500 ring-1 ring-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+              >
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                <svg *ngIf="!isPasswordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <svg *ngIf="isPasswordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              </button>
+            </div>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="mt-1 text-sm text-red-600">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">Le mot de passe est requis.</div>
+              <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères.</div>
+            </div>
+          </div>
+
+          <!-- Option Se souvenir de moi -->
+          <div class="flex items-center mb-6">
+            <input
+              id="remember"
+              type="checkbox"
+              formControlName="rememberMe"
+              class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+            >
+            <label for="remember" class="ml-2 block text-sm text-gray-700">Se souvenir de moi</label>
+          </div>
+
+          <!-- Bouton Connexion -->
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex justify-center items-center"
+            [disabled]="isLoading"
+          >
+            <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>{{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}</span>
+          </button>
+        </form>
+
+        <!-- Options de connexion alternatives -->
+        <div class="mt-8">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white text-gray-500">Ou connectez-vous avec</span>
+            </div>
+          </div>
+
+          <div class="mt-6 grid grid-cols-3 gap-3">
+            <button type="button" class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow transition-all">
+              <svg class="h-5 w-5 text-[#4285F4]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+              </svg>
+            </button>
+            <button type="button" class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow transition-all">
+              <svg class="h-5 w-5 text-[#1877F2]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </button>
+            <button type="button" class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow transition-all">
+              <svg class="h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.266 3.488c1.652-.885 2.883-.535 2.883-.535s-.88 1.489-.305 3.033c.785 1.527 1.161 4.106-.428 6.761-1.389 2.623-3.826 2.554-3.826 2.554s-.2-1.478-1.768-2.972c-1.604-1.364-1.766-2.361-1.766-2.361s1.767-.087 2.634-1.29c.757-1.046.792-2.262.576-5.19zm-9.125 20.497c-1.16 0-2.027-.82-2.571-1.904-.544.32-1.177.513-1.858.513-2.047 0-3.705-1.85-3.705-4.13s1.658-4.125 3.705-4.125c.681 0 1.314.192 1.858.513.544-1.081 1.412-1.904 2.571-1.904 1.591 0 2.883 1.477 2.883 3.292 0 1.82-1.292 3.298-2.883 3.298-.226 0-.442-.03-.651-.084.032.242.052.49.052.746 0 1.778-1.158 3.785-3.401 3.785z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lien d'inscription -->
+        <div class="mt-8 text-center">
+          <p class="text-sm text-gray-600">
+            Vous n'avez pas de compte?
+            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-800 transition-colors">S'inscrire</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
