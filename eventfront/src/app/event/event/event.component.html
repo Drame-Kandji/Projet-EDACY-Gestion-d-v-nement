@@ -46,7 +46,7 @@
       <button (click)="openEditModal(event)" class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-yellow-500 hover:bg-yellow-600">
         Modifier
       </button>
-      <button class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-red-500 hover:bg-red-600">
+      <button (click)="deleteEvent(event.id)" class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-red-500 hover:bg-red-600">
         Supprimer
       </button>
       <a  [routerLink]="['/event', event.id]"

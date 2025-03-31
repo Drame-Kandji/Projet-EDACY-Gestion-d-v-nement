@@ -12,7 +12,7 @@ import { LoginServiceService } from '../../services/login-service.service';
   styleUrl: './events.component.css'
 })
 export class EventsComponent {
-  featuredEvents: Event[] = [];
+  allEvents: Event[]=[];
   upcomingEvents: Event[] = [];
   categories: string[] = ['Tous', 'Conférence', 'Concert', 'Atelier', 'Exposition', 'Sport'];
   selectedCategory: string = 'Tous';
@@ -39,7 +39,7 @@ export class EventsComponent {
 
      loadEvents(): void {
        // Données fictives - à remplacer par des appels API réels
-       const allEvents: Event[] = [
+       this.allEvents=[
          {
            id: 1,
            title: 'Conférence Technologie Web 2025',
@@ -100,7 +100,7 @@ export class EventsComponent {
        ];
 
        // Filtrage des événements
-       this.upcomingEvents = allEvents.sort((a, b) =>
+       this.upcomingEvents = this.allEvents.sort((a, b) =>
          new Date(a.date.split(' ')[0] + ' 2025').getTime() -
          new Date(b.date.split(' ')[0] + ' 2025').getTime()
        );
@@ -137,17 +137,17 @@ export class EventsComponent {
       saveEvent(eventData: Event): void {
         console.log(eventData);
 
-        /* if (eventData.id) {
+        if (eventData.id) {
           // Mise à jour d'un événement existant
-          const index = this.events.findIndex(e => e.id === eventData.id);
+          const index = this.allEvents.findIndex(e => e.id === eventData.id);
           if (index !== -1) {
-            this.events[index] = eventData;
+            this.allEvents[index] = eventData;
           }
         } else {
           // Création d'un nouvel événement
-          const newId = Math.max(...this.events.map(e => e.id), 0) + 1;
-          this.events.push({ ...eventData, id: newId });
-        }*/
+          const newId = Math.max(...this.allEvents.map(e => e.id), 0) + 1;
+          this.allEvents.push({ ...eventData, id: newId });
+        }
 
       }
 }

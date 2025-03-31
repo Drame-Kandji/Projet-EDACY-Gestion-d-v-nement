@@ -43,8 +43,10 @@ export class EventComponent {
   }
 
   deleteEvent(id: number): void {
-    /* if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      this.events = this.events.filter(e => e.id !== id);
-    } */
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+      //this.events = this.events.filter(e => e.id !== id);
+      console.log(id);
+
+    }
   }
 }
