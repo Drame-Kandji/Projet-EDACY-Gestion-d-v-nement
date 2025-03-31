@@ -5,6 +5,7 @@ import { Injectable, signal } from '@angular/core';
 })
 export class LoginServiceService {
   login=signal(false);
+  create_event=signal(false);
   constructor() { }
 
   loginService(){

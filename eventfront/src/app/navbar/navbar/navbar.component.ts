@@ -40,6 +40,13 @@ export class NavbarComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+
+  create_event()
+  {
+    this.service.create_event.set(true);
+    console.log(this.service.create_event());
+  }
+
   logout(): void {
     // Implémentez la logique de déconnexion ici
     this.service.login.set(false);

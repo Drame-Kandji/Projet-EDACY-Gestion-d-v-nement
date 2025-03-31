@@ -1,138 +1,125 @@
 // edit-event-modal.component.ts
-import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { Event } from '../../interfaces/event';
 
-// Interface pour le modèle d'événement
-export interface Event {
-  id: number;
-  title: string;
-  description: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  category: string;
-  imageUrl?: string;
-  maxParticipants?: number;
-  isPublic: boolean;
-}
 
 @Component({
   selector: 'app-edit-event-modal',
-  imports:[ReactiveFormsModule,NgIf,BrowserModule],
+  imports:[ReactiveFormsModule,CommonModule],
   templateUrl: './edit-event-modal.component.html',
   styleUrls: ['./edit-event-modal.component.css']
 })
 export class EditEventModalComponent implements OnInit {
-  @Input() show: boolean = false;
-  @Input() event: Event | null = null;
+  @Input() isOpen = false;
+  @Input() event:Event  | null = null;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<Event>();
 
-  eventForm!: FormGroup;
-  isSubmitting: boolean = false;
+  eventForm: FormGroup;
+  isSubmitting = false;
+  imagePreview: string | null = null;
 
-  // Catégories d'événements (à adapter selon vos besoins)
   categories = [
-    { id: 'conference', name: 'Conférence' },
-    { id: 'seminar', name: 'Séminaire' },
-    { id: 'workshop', name: 'Atelier' },
-    { id: 'party', name: 'Fête' },
-    { id: 'concert', name: 'Concert' },
-    { id: 'exhibition', name: 'Exposition' },
-    { id: 'meeting', name: 'Réunion' },
-    { id: 'other', name: 'Autre' }
+    'Conférence',
+    'Atelier',
+    'Réunion',
+    'Séminaire',
+    'Formation',
+    'Webinaire',
+    'Concert',
+    'Exposition',
+    'Festival',
+    'Sport'
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.eventForm = this.fb.group({
+      id: [null],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      date: ['', Validators.required],
+      heure: ['', Validators.required],
+      location: ['', Validators.required],
+      category: ['', Validators.required],
+      attendees: [0, [Validators.required, Validators.min(1)]],
+      image: ['']
+    });
+  }
 
   ngOnInit(): void {
-    this.initForm();
+    this.resetForm();
   }
 
   ngOnChanges(): void {
-    if (this.show && this.event && this.eventForm) {
-      this.populateForm();
-    }
+    this.resetForm();
   }
 
-  initForm(): void {
-    this.eventForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5)]],
-      description: ['', [Validators.required, Validators.minLength(20)]],
-      location: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      category: ['', Validators.required],
-      imageUrl: [''],
-      maxParticipants: [0],
-      isPublic: [true]
-    });
-
+  resetForm(): void {
     if (this.event) {
-      this.populateForm();
+      this.eventForm.patchValue({
+        id: this.event.id,
+        title: this.event.title,
+        description: this.event.description,
+        date: this.event.date,
+        heure: this.event.heure,
+        location: this.event.location,
+        category: this.event.category,
+        attendees: this.event.attendees,
+        image: ''
+      });
+      this.imagePreview = this.event.image || null;
+    } else {
+      this.eventForm.reset({
+        attendees: 1,
+        category: this.categories[0]
+      });
+      this.imagePreview = null;
     }
   }
 
-  populateForm(): void {
-    if (!this.event) return;
-
-    // Formater les dates pour l'input datetime-local
-    const startDate = this.formatDateForInput(new Date(this.event.startDate));
-    const endDate = this.formatDateForInput(new Date(this.event.endDate));
-
-    this.eventForm.patchValue({
-      title: this.event.title,
-      description: this.event.description,
-      location: this.event.location,
-      startDate: startDate,
-      endDate: endDate,
-      category: this.event.category,
-      imageUrl: this.event.imageUrl || '',
-      maxParticipants: this.event.maxParticipants || 0,
-      isPublic: this.event.isPublic
-    });
-  }
-
-  formatDateForInput(date: Date): string {
-    // Format date to YYYY-MM-DDThh:mm
-    return date.toISOString().slice(0, 16);
-  }
-
-  onSubmit(): void {
-    if (this.eventForm.invalid) {
-      this.eventForm.markAllAsTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-
-    // Créer l'objet événement mis à jour
-    const updatedEvent: Event = {
-      id: this.event ? this.event.id : 0,
-      ...this.eventForm.value
-    };
-
-    // Simuler un délai de soumission (remplacer par votre API réelle)
-    setTimeout(() => {
-      this.save.emit(updatedEvent);
-      this.isSubmitting = false;
-      this.closeModal();
-    }, 800);
-  }
-
-  closeModal(): void {
+  onClose(): void {
     this.close.emit();
   }
 
-  // Empêcher la propagation des clics dans le modal
-  stopPropagation(event: MouseEvent): void {
-    event.stopPropagation();
+  onSubmit(): void {
+    if (this.eventForm.valid) {
+      this.isSubmitting = true;
+
+      // Simuler un délai d'API
+      setTimeout(() => {
+        const formData = this.eventForm.value;
+
+        // Si une nouvelle image a été chargée, utiliser le preview
+        // sinon, garder l'image existante
+        if (this.imagePreview && !formData.image) {
+          formData.image = this.imagePreview;
+        }
+
+        this.save.emit(formData);
+        this.isSubmitting = false;
+        this.onClose();
+      }, 800);
+    } else {
+      this.eventForm.markAllAsTouched();
+    }
   }
 
-  // Raccourci pour accéder aux contrôles du formulaire
-  get f() {
-    return this.eventForm.controls;
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.imagePreview = null;
+    this.eventForm.patchValue({ image: '' });
   }
 }
