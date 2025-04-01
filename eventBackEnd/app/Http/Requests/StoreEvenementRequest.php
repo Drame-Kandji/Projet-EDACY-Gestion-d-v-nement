@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreEventRequest extends FormRequest
+class StoreEvenementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required',
+            'location' => 'required|string|max:255',
+            'heure' => 'required',
+            'category' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'attendees' => 'nullable|numeric|min:0',
         ];
     }
 }

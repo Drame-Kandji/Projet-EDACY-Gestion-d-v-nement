@@ -65,7 +65,7 @@
             <div>
               <label for="heure" class="block text-sm font-medium text-gray-700">Heure *</label>
               <div class="mt-1">
-                <input type="heure" id="heure" formControlName="heure"
+                <input type="time" id="heure" formControlName="heure"
                   class="shadow-sm px-2 h-8 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-blue-300 rounded-md">
               </div>
               <p *ngIf="eventForm.get('heure')?.touched && eventForm.get('heure')?.invalid" class="mt-1 text-sm text-red-600">
