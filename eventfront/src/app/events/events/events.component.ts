@@ -13,7 +13,6 @@ import { LoginServiceService } from '../../services/login-service.service';
 })
 export class EventsComponent {
   allEvents: Event[]=[];
-  upcomingEvents: Event[] = [];
   categories: string[] = ['Tous', 'Conférence', 'Concert', 'Atelier', 'Exposition', 'Sport'];
   selectedCategory: string = 'Tous';
   searchTerm: string = '';
@@ -99,11 +98,6 @@ export class EventsComponent {
 
        ];
 
-       // Filtrage des événements
-       this.upcomingEvents = this.allEvents.sort((a, b) =>
-         new Date(a.date.split(' ')[0] + ' 2025').getTime() -
-         new Date(b.date.split(' ')[0] + ' 2025').getTime()
-       );
      }
 
      filterByCategory(category: string): void {
@@ -111,15 +105,16 @@ export class EventsComponent {
      }
 
      get filteredEvents(): Event[] {
-       return this.upcomingEvents.filter(event => {
+       return this.allEvents.filter(event => {
          // Filtrer par catégorie
          const categoryMatch = this.selectedCategory === 'Tous' || event.category === this.selectedCategory;
 
          // Filtrer par recherche
          const searchMatch = this.searchTerm === '' ||
            event.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-           event.location.toLowerCase().includes(this.searchTerm.toLowerCase());
-
+           event.location.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           event.category.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           event.date.toLowerCase().includes(this.searchTerm.toLowerCase());
          return categoryMatch && searchMatch;
        });
      }
