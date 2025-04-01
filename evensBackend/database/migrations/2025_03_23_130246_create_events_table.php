@@ -15,13 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->string('extrait');
-            $table->foreignId('category_id');
-            $table->string('slug');
+            $table->foreignId('category');
             $table->string('image');
-            $table->string('date_debut');
-            $table->string('date_fin');
-            $table->string('lieu');
+            $table->string('location');
             $table->string('heure');
             $table->timestamps();
         });

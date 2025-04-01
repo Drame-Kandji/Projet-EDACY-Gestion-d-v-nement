@@ -33,16 +33,7 @@ class EventController extends Controller
     public function store(StoreEventRequest $request)
     {
         Event::create([
-            'title' => $request->name,
-            'description' => $request->description,
-            'catogory_id'=>$request->catogory,
-            'slug'=>Str::slug($request->title),
-            'extrait' => Str::limit($request->description,50),
-            'image'=>$request->image,
-            'date_debut'=>$request->date_debut,
-            'date_fin'=>$request->date_fin,
-            'lieu'=>$request->lieu,
-            'heure'=>$request->heure
+            $request
         ]);
 
         return response()->json([
@@ -74,19 +65,10 @@ class EventController extends Controller
     public function update(UpdateEventRequest $request, Event $event)
     {
          Event::update([
-            $event->title => $request->title,
-            $event->description => $request->description,
-            $event->catogory_id=>$request->catogory,
-            $event->slug=>Str::slug($request->title),
-            $event->extrait => Str::limit($request->description,50),
-            $event->image =>$request->image,
-            $event->date_debut=>$request->date_debut,
-            $event->date_fin=>$request->date_fin,
-            $event->lieu=>$request->lieu,
-            $event->heure=>$request->heure
+
          ]);
        $event->save();
-       
+
 
     }
 
