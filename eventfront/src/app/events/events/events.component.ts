@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { EditEventModalComponent } from '../../edit-event/edit-event-modal/edit-event-modal.component';
 import { LoginServiceService } from '../../services/login-service.service';
 import { EventServiceService } from '../../services/event-service.service';
-import { Succes } from '../../interfaces/succes';
+import { Succes, SuccesEvent } from '../../interfaces/succes';
 import { log } from 'console';
 @Component({
   selector: 'app-events',
@@ -24,15 +24,16 @@ export class EventsComponent {
 
   selectedEvent: Event | null = null;
 
-  response = computed(() => {
-    return this.loginService.create_event();
-   });
-
-
   constructor(private eventService:EventServiceService) {
     effect(() => {
-      this.openCreateModal(this.response());
+      this.openCreateModal(this.loginService.create_event());
       console.log('creation..........');
+    });
+
+    effect(() => {
+      this.eventService.refresh()
+      this.loadEvents();
+      console.log('loading............');
     });
   }
 
@@ -47,11 +48,10 @@ export class EventsComponent {
         (data:Succes)=>{
           if(data.status==200){
             this.allEvents=data.data
-            console.log(data);
+            //console.log(data);
           }
         }
        )
-
      }
 
      filterByCategory(category: string): void {
@@ -85,6 +85,10 @@ export class EventsComponent {
 
       UpdateEvent(event:Event){
        this.eventService.updateEvent(event).subscribe(
+        (data)=>{
+          console.log(data);
+          this.eventService.refresh.set('update');
+        }
        )
       }
 
@@ -93,9 +97,8 @@ export class EventsComponent {
         if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
           this.eventService.deleteEvent(id).subscribe(
             (res)=>{
+              this.eventService.refresh.set('delete')
               console.log(res);
-              console.log("Événement supprimé !");
-              this.allEvents = this.allEvents.filter(event => event.id !== id);
             }
           )
         }
@@ -106,8 +109,9 @@ export class EventsComponent {
         this.eventService.saveEvent(eventData).subscribe(
           (data)=>{
             console.log(data);
-            this.allEvents.push(eventData);
+            this.eventService.refresh.set('save')
           }
         )
+
       }
 }

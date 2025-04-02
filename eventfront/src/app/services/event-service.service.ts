@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Event } from '../interfaces/event';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
@@ -11,6 +11,7 @@ import { Succes, SuccesEvent } from '../interfaces/succes';
 export class EventServiceService {
   http=inject(HttpClient)
   api_url='http://localhost:8000/api/evenements'
+  refresh=signal<string>('')
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   events$ = this.eventsSubject.asObservable();
   constructor() { }
@@ -39,12 +40,10 @@ export class EventServiceService {
 
   updateEvent(event:Event):Observable<SuccesEvent>
   {
-    console.log(event);
+    //console.log(event);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.patch<SuccesEvent>(`${this.api_url}/${event.id}`,event).pipe(
-      tap((response: SuccesEvent) => console.log(response))
-    )
+    return this.http.patch<SuccesEvent>(`${this.api_url}/${event.id}`,event)
   }
 }
