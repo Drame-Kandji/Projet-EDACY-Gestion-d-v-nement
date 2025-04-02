@@ -40,7 +40,12 @@
     <div *ngIf="filteredEvents.length > 0; else noEvents">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (event of filteredEvents; track event.id) {
-          <app-event [event]="event" [description]="true"/>
+          <app-event
+           [event]="event" [description]="true"
+           (UpdateEvent)="UpdateEvent($event)"
+           (DeleteEvent)="DeleteEvent($event)"
+           >
+          </app-event>
         }
       </div>
     </div>
@@ -68,7 +73,8 @@
   [isOpen]="isModalOpen"
   [event]="selectedEvent"
   (close)="closeModal()"
-  (save)="saveEvent($event)">
+  (save)="saveEvent($event)"
+  >
 </app-edit-event-modal>
 </div>
 

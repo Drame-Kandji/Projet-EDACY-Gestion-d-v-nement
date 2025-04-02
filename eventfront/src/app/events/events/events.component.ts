@@ -5,6 +5,9 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditEventModalComponent } from '../../edit-event/edit-event-modal/edit-event-modal.component';
 import { LoginServiceService } from '../../services/login-service.service';
+import { EventServiceService } from '../../services/event-service.service';
+import { Succes } from '../../interfaces/succes';
+import { log } from 'console';
 @Component({
   selector: 'app-events',
   imports: [EventComponent, NgIf, NgClass, NgFor, FormsModule, EditEventModalComponent],
@@ -13,19 +16,20 @@ import { LoginServiceService } from '../../services/login-service.service';
 })
 export class EventsComponent {
   allEvents: Event[]=[];
-  upcomingEvents: Event[] = [];
   categories: string[] = ['Tous', 'Conférence', 'Concert', 'Atelier', 'Exposition', 'Sport'];
   selectedCategory: string = 'Tous';
   searchTerm: string = '';
-  service=inject(LoginServiceService);
+  loginService=inject(LoginServiceService);
   isModalOpen = false;
+
   selectedEvent: Event | null = null;
 
   response = computed(() => {
-    return this.service.create_event();
+    return this.loginService.create_event();
    });
 
-  constructor() {
+
+  constructor(private eventService:EventServiceService) {
     effect(() => {
       this.openCreateModal(this.response());
       console.log('creation..........');
@@ -33,77 +37,21 @@ export class EventsComponent {
   }
 
    ngOnInit(): void {
-       // Simuler des données d'événements depuis une API
+       // données d'événements depuis une API
        this.loadEvents();
      }
 
      loadEvents(): void {
-       // Données fictives - à remplacer par des appels API réels
-       this.allEvents=[
-         {
-           id: 1,
-           title: 'Conférence Technologie Web 2025',
-           description:'Conférence Technologie Web 2025Conférence Technologie Web 2025',
-           heure:'15',
-           date: '15 Avril 2025',
-           location: 'Paris Expo Porte de Versailles',
-           image: 'https://www.brgm.fr/sites/default/files/images/2020-08/evenement-mining-indaba-2020-001.jpg',
-           category: 'Conférence',
-           attendees: 1250,
-         },
-         {
-           id: 2,
-           title: 'Festival de musique électronique',
-           date: '22-24 Mai 2025',
-           location: 'Parc des Expositions',
-           image: 'https://mister-riviera.com/wp-content/uploads/2023/05/Festivals-sur-la-cote-d-azur-blog-mister-riviera-sortir-a-nice-cannes-monaco-soiree-evenement-french-riviera-influenceur.png',
-           category: 'Concert',
-           attendees: 5000,
-         },
-         {
-           id: 3,
-           title: 'Atelier de photographie',
-           date: '10 Avril 2025',
-           location: 'Studio Lumière',
-           image: 'https://force-n.sn/sites/default/files/services/force-n-services-promo-sciences.webp',
-           category: 'Atelier',
-           attendees: 45
-         },
-         {
-           id: 4,
-           title: 'Exposition d\'art contemporain',
-           date: '1-30 Avril 2025',
-           location: 'Galerie Moderne',
-           image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlPzsXwMkEtf9xntHvC4cDHtJV-mGCcCYEDw&s',
-           category: 'Exposition',
-           attendees: 890
-         },
-         {
-           id: 5,
-           title: 'Marathon de Paris',
-           date: '12 Avril 2025',
-           location: 'Champs-Élysées',
-           image: 'https://demarchesadministratives.fr/images/demarches/308/manifestation-sportive.jpg',
-           category: 'Sport',
-           attendees: 25000
-         },
-         {
-           id: 6,
-           title: 'Séminaire Marketing Digital',
-           date: '20 Avril 2025',
-           location: 'Centre de Conférences',
-           image: 'https://simsenegal.com/wp-content/uploads/2024/09/DSC03127-scaled-400x400.jpg',
-           category: 'Conférence',
-           attendees: 350
-         },
+        //appels API
+       this.eventService.getEvents().subscribe(
+        (data:Succes)=>{
+          if(data.status==200){
+            this.allEvents=data.data
+            console.log(data);
+          }
+        }
+       )
 
-       ];
-
-       // Filtrage des événements
-       this.upcomingEvents = this.allEvents.sort((a, b) =>
-         new Date(a.date.split(' ')[0] + ' 2025').getTime() -
-         new Date(b.date.split(' ')[0] + ' 2025').getTime()
-       );
      }
 
      filterByCategory(category: string): void {
@@ -111,15 +59,16 @@ export class EventsComponent {
      }
 
      get filteredEvents(): Event[] {
-       return this.upcomingEvents.filter(event => {
+       return this.allEvents.filter(event => {
          // Filtrer par catégorie
          const categoryMatch = this.selectedCategory === 'Tous' || event.category === this.selectedCategory;
-
          // Filtrer par recherche
          const searchMatch = this.searchTerm === '' ||
            event.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-           event.location.toLowerCase().includes(this.searchTerm.toLowerCase());
-
+           event.location.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           event.category.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           event.date.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           event.heure.toLowerCase().includes(this.searchTerm.toLowerCase());
          return categoryMatch && searchMatch;
        });
      }
@@ -130,24 +79,35 @@ export class EventsComponent {
        }
        closeModal(): void {
         this.isModalOpen = false;
-        this.service.create_event.set(false);
+        this.loginService.create_event.set(false);
         this.selectedEvent = null;
+      }
+
+      UpdateEvent(event:Event){
+       this.eventService.updateEvent(event).subscribe(
+       )
+      }
+
+      DeleteEvent(id:number)
+      {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+          this.eventService.deleteEvent(id).subscribe(
+            (res)=>{
+              console.log(res);
+              console.log("Événement supprimé !");
+              this.allEvents = this.allEvents.filter(event => event.id !== id);
+            }
+          )
+        }
       }
 
       saveEvent(eventData: Event): void {
         console.log(eventData);
-
-        if (eventData.id) {
-          // Mise à jour d'un événement existant
-          const index = this.allEvents.findIndex(e => e.id === eventData.id);
-          if (index !== -1) {
-            this.allEvents[index] = eventData;
+        this.eventService.saveEvent(eventData).subscribe(
+          (data)=>{
+            console.log(data);
+            this.allEvents.push(eventData);
           }
-        } else {
-          // Création d'un nouvel événement
-          const newId = Math.max(...this.allEvents.map(e => e.id), 0) + 1;
-          this.allEvents.push({ ...eventData, id: newId });
-        }
-
+        )
       }
 }

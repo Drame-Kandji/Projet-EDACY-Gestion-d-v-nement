@@ -1,0 +1,192 @@
+<!-- calendar-page.component.html -->
+<div class="container mx-auto px-4 py-8">
+  <!-- En-tête avec titre et navigation -->
+  <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Calendrier des événements</h1>
+
+    <div class="flex items-center space-x-4">
+      <button
+        (click)="goToToday()"
+        class="px-3 py-1 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+        Aujourd'hui
+      </button>
+
+      <div class="flex items-center">
+        <button
+          (click)="prevMonth()"
+          class="p-1 rounded-md hover:bg-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <h2 class="text-xl font-semibold mx-4 w-36 text-center">
+          {{ months[currentMonth] }} {{ currentYear }}
+        </h2>
+
+        <button
+          (click)="nextMonth()"
+          class="p-1 rounded-md hover:bg-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <button
+        (click)="openCreateEventModal()"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Nouvel événement
+      </button>
+    </div>
+  </div>
+
+  <!-- Grille du calendrier -->
+  <div class="flex flex-col lg:flex-row gap-6">
+    <div class="lg:w-8/12">
+      <!-- Afficher l'indicateur de chargement -->
+      <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+        <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+
+      <!-- Conteneur du calendrier -->
+      <div *ngIf="!isLoading" class="bg-white rounded-lg shadow overflow-hidden">
+        <!-- Jours de la semaine -->
+        <div class="grid grid-cols-7 border-b border-gray-200">
+          <div *ngFor="let day of weekdays" class="py-2 px-1 text-center text-sm font-semibold text-gray-700">
+            {{ day.substring(0, 3) }}
+          </div>
+        </div>
+
+        <!-- Semaines du calendrier -->
+        <div class="grid grid-cols-1">
+          <div *ngFor="let week of calendarWeeks" class="grid grid-cols-7 border-b border-gray-200 last:border-b-0">
+            <div
+              *ngFor="let day of week.days"
+              [class.bg-indigo-50]="day.isToday"
+              [class.text-gray-400]="!day.isCurrentMonth"
+              [class.font-bold]="day.isToday"
+              [class.border-indigo-500]="selectedDate && selectedDate.getDate() === day.date.getDate() &&
+                                       selectedDate.getMonth() === day.date.getMonth() &&
+                                       selectedDate.getFullYear() === day.date.getFullYear()"
+              class="min-h-24 p-1 border border-transparent hover:bg-gray-50 cursor-pointer group"
+              (click)="selectDate(day)">
+
+              <!-- Numéro du jour -->
+              <div class="flex justify-between items-center px-1">
+                <span [class.text-indigo-600]="day.isToday" class="text-sm">
+                  {{ day.date.getDate() }}
+                </span>
+                <span *ngIf="day.events.length > 0" class="flex items-center justify-center h-5 w-5 rounded-full bg-indigo-100 text-indigo-800 text-xs">
+                  {{ day.events.length }}
+                </span>
+              </div>
+
+              <!-- Événements du jour (affichage limité) -->
+              <div *ngIf="day.events.length > 0" class="mt-1">
+                <div
+                  *ngFor="let event of day.events.slice(0, 2)"
+                  class="text-xs px-1 py-0.5 mt-0.5 truncate rounded"
+                  [ngClass]="getEventCategoryClass(event.category)">
+                  {{ event.title }}
+                </div>
+                <div *ngIf="day.events.length > 2" class="text-xs text-gray-500 mt-0.5 px-1">
+                  + {{ day.events.length - 2 }} plus
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panneau latéral avec détails -->
+    <div class="lg:w-4/12 bg-white rounded-lg shadow">
+      <div class="p-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800">
+          {{ selectedDate | date:'EEEE d MMMM yyyy' }}
+        </h3>
+      </div>
+
+      <div class="p-4 overflow-y-auto max-h-[600px]">
+        <!-- Message si aucun événement -->
+        <div *ngIf="selectedEvents.length === 0" class="text-center py-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p class="mt-2 text-gray-500">Aucun événement prévu pour cette date</p>
+        </div>
+
+        <!-- Liste des événements -->
+        <div *ngIf="selectedEvents.length > 0" class="space-y-4">
+          <div *ngFor="let event of selectedEvents" class="p-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+            <div class="flex justify-between items-start">
+              <h4 class="font-medium text-gray-900">{{ event.title }}</h4>
+              <span [ngClass]="getEventCategoryClass(event.category)" class="px-2 py-1 text-xs rounded-full">
+                {{ event.category }}
+              </span>
+            </div>
+
+            <div class="mt-2 space-y-2">
+              <div class="flex items-center text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ formatTime(event.heure) }}
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ event.location }}
+              </div>
+
+              <p class="text-sm text-gray-600 mt-2">
+                {{ event.description }}
+              </p>
+
+              <div class="flex items-center justify-between pt-2 mt-2 border-t border-gray-100">
+                <div class="text-sm text-gray-600">
+                  {{ event.attendees }}participants
+                </div>
+
+                <div class="flex space-x-2">
+                  <button
+                    (click)="openEditEventModal(event)"
+                    class="text-indigo-600 hover:text-indigo-800 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                  <button
+                    (click)="deleteEvent(event.id)"
+                    class="text-red-600 hover:text-red-800 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de création/modification d'événement -->
+  <app-edit-event-modal
+    [isOpen]="isEventModalOpen"
+    [event]="selectedEvent"
+    (close)="closeEventModal()"
+    (save)="handleEventSaved($event)">
+  </app-edit-event-modal>
+</div>

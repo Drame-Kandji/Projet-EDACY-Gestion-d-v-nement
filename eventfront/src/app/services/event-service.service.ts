@@ -1,25 +1,28 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Event } from '../interfaces/event';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import { Succes, SuccesEvent } from '../interfaces/succes';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventServiceService {
   http=inject(HttpClient)
-  api_url='http://localhost:8000/api/events'
+  api_url='http://localhost:8000/api/evenements'
+  private eventsSubject = new BehaviorSubject<Event[]>([]);
+  events$ = this.eventsSubject.asObservable();
   constructor() { }
 
-  getEvents():Observable<Event[]>
+  getEvents():Observable<Succes>
   {
-     return this.http.get<Event[]>(this.api_url)
+     return this.http.get<Succes>(this.api_url)
   }
 
-  getEvent(id:number):Observable<Event>
+  getEvent(id:string|null):Observable<SuccesEvent>
   {
-    return this.http.get<Event>(`${this.api_url}/${id}`)
+    return this.http.get<SuccesEvent>(`${this.api_url}/${id}`)
   }
 
   deleteEvent(id:number):Observable<Event>
@@ -29,11 +32,19 @@ export class EventServiceService {
 
   saveEvent(event:Event):Observable<Event>
   {
+    console.log(event);
+
     return this.http.post<Event>(this.api_url,event)
   }
-  
-  updateEvent(event:Event,id:number):Observable<Event>
+
+  updateEvent(event:Event):Observable<SuccesEvent>
   {
-    return this.http.patch<Event>(`${this.api_url}/${id}`,id)
+    console.log(event);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch<SuccesEvent>(`${this.api_url}/${event.id}`,event).pipe(
+      tap((response: SuccesEvent) => console.log(response))
+    )
   }
 }

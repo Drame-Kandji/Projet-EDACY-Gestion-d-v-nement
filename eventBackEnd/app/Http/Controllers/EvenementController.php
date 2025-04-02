@@ -14,22 +14,15 @@ class EvenementController extends Controller
      */
     public function index()
     {
-        try {
-            $category = request()->query('category');
-
-            // Vérifier si un type spécifique est demandé
-            if ($category && in_array($category, ['Conférence', 'Concert', 'Atelier', 'Exposition', 'Sport'])) {
-                $evenements = Evenement::where('category', $category)->get();
-            } else {
-                // Si "Tous" ou aucun type spécifié, récupérer tous les événements
-                $evenements = Evenement::all();
-            }
+        try {   // Si "Tous" ou aucun type spécifié, récupérer tous les événements
+            $evenements = Evenement::all();
             return response()->json([
-                'statsus'=> 200,
+                'status'=> 200,
                 'message' => 'Liste des evenements',
                 'data' => $evenements
             ]);
-        } catch (\Exception $e) {
+           }
+        catch (\Exception $e) {
             return response()->json([
                 'error' => 'Erreur lors de la récupération des événements',
                 'message' => $e->getMessage()
@@ -83,7 +76,6 @@ class EvenementController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-
     }
 
     /**
@@ -91,6 +83,7 @@ class EvenementController extends Controller
      */
     public function update(UpdateEvenementRequest $request, string $id)
     {
+        //dd($request->all());
         try {
             $evenement = Evenement::findOrFail($id);
             if ($evenement) {
@@ -113,8 +106,6 @@ class EvenementController extends Controller
             ], 500);
         }
     }
-
-
     /**
      * Remove the specified resource from storage.
      */

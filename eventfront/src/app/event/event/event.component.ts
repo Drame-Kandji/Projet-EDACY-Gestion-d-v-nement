@@ -1,20 +1,28 @@
-import { Component, computed, effect, inject, Input } from '@angular/core';
+import { Component, computed, effect, inject, Input, Output,EventEmitter } from '@angular/core';
 import { Event } from '../../interfaces/event';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { EditEventModalComponent } from "../../edit-event/edit-event-modal/edit-event-modal.component";
-import { LoginServiceService } from '../../services/login-service.service';
+import { DatePipe } from '@angular/common';
+import { EventServiceService } from '../../services/event-service.service';
+
+
 
 @Component({
   selector: 'app-event',
-  imports: [RouterLink, RouterLinkActive, EditEventModalComponent],
+  imports: [RouterLink, RouterLinkActive, EditEventModalComponent,DatePipe],
   templateUrl: './event.component.html',
   styleUrl: './event.component.css'
 })
 export class EventComponent {
   @Input() event!:Event;
   @Input() description:boolean=true;
+  @Output() UpdateEvent = new EventEmitter<Event>();
+  @Output() DeleteEvent = new EventEmitter<number>();
+
   isModalOpen = false;
   selectedEvent: Event | null = null;
+
+  constructor(private eventService:EventServiceService){}
 
   openEditModal(event: Event): void {
     this.selectedEvent = { ...event };
@@ -29,24 +37,13 @@ export class EventComponent {
   }
 
   saveEvent(eventData: Event): void {
-    /* if (eventData.id) {
-      // Mise à jour d'un événement existant
-      const index = this.events.findIndex(e => e.id === eventData.id);
-      if (index !== -1) {
-        this.events[index] = eventData;
-      }
-    } else {
-      // Création d'un nouvel événement
-      const newId = Math.max(...this.events.map(e => e.id), 0) + 1;
-      this.events.push({ ...eventData, id: newId });
-    } */
+    //console.log(eventData);
+    this.UpdateEvent.emit(eventData);
   }
 
   deleteEvent(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      //this.events = this.events.filter(e => e.id !== id);
-      console.log(id);
-
-    }
+    this.DeleteEvent.emit(id);
+    //console.log(id);
   }
+
 }
