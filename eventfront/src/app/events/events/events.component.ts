@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Event } from '../../interfaces/event';
 import { EventComponent } from "../../event/event/event.component";
 import { NgClass, NgFor, NgIf } from '@angular/common';
@@ -22,6 +22,7 @@ export class EventsComponent {
   loginService=inject(LoginServiceService);
   isModalOpen = false;
 
+
   selectedEvent: Event | null = null;
 
   constructor(private eventService:EventServiceService) {
@@ -30,11 +31,6 @@ export class EventsComponent {
       console.log('creation..........');
     });
 
-    effect(() => {
-      this.eventService.refresh()
-      this.loadEvents();
-      console.log('loading............');
-    });
   }
 
    ngOnInit(): void {
@@ -87,7 +83,7 @@ export class EventsComponent {
        this.eventService.updateEvent(event).subscribe(
         (data)=>{
           console.log(data);
-          this.eventService.refresh.set('update');
+          this.loadEvents();
         }
        )
       }
@@ -97,7 +93,7 @@ export class EventsComponent {
         if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
           this.eventService.deleteEvent(id).subscribe(
             (res)=>{
-              this.eventService.refresh.set('delete')
+              this.loadEvents();
               console.log(res);
             }
           )
@@ -109,7 +105,7 @@ export class EventsComponent {
         this.eventService.saveEvent(eventData).subscribe(
           (data)=>{
             console.log(data);
-            this.eventService.refresh.set('save')
+            this.loadEvents();
           }
         )
 

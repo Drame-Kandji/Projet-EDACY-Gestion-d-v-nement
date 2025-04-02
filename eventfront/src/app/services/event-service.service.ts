@@ -11,9 +11,6 @@ import { Succes, SuccesEvent } from '../interfaces/succes';
 export class EventServiceService {
   http=inject(HttpClient)
   api_url='http://localhost:8000/api/evenements'
-  refresh=signal<string>('')
-  private eventsSubject = new BehaviorSubject<Event[]>([]);
-  events$ = this.eventsSubject.asObservable();
   constructor() { }
 
   getEvents():Observable<Succes>
