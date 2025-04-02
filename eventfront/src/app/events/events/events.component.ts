@@ -21,11 +21,13 @@ export class EventsComponent {
   searchTerm: string = '';
   loginService=inject(LoginServiceService);
   isModalOpen = false;
+
   selectedEvent: Event | null = null;
 
   response = computed(() => {
     return this.loginService.create_event();
    });
+
 
   constructor(private eventService:EventServiceService) {
     effect(() => {
