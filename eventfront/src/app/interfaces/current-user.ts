@@ -3,4 +3,5 @@ export interface CurrentUser {
     lastName: string,
     email:string;
     //avatar:'';
+    role:string;
 }

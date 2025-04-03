@@ -5,6 +5,7 @@ import { User } from '../interfaces/user';
 import { Observable } from 'rxjs';
 import { LoginSucces } from '../interfaces/login-succes';
 import { CurrentUser } from '../interfaces/current-user';
+import { UserConnected } from '../interfaces/user-connected';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,14 @@ export class LoginServiceService {
     lastName: '',
     email: '',
     //avatar: ''
+    role:''
   })
-  
+
   constructor() { }
 
-  loginUser(infos:Login){
-    this.http.post(this.api_url,infos)
-    this.login.set(true);
+  loginUser(user:Login):Observable<UserConnected>{
+   return this.http.post<UserConnected>(`${this.api_url}/login`,user)
+   //this.login.set(true);
   }
 
   logout()

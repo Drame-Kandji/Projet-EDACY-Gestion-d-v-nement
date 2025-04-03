@@ -39,9 +39,11 @@
         </button>
 
         <!-- Bouton de création d'événement -->
-        <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-          Créer un événement
-        </button>
+         @if (currentUser().role=='admin') {
+          <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+            Créer un événement
+          </button>
+         }
 
         <!-- Menu profil utilisateur -->
         <div class="ml-3 relative">
@@ -71,9 +73,10 @@
 
       <!-- Bouton menu mobile -->
       <div class="-mr-2 flex items-center sm:hidden">
+        @if (currentUser().role=='admin') {
         <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
           Créer un événement
-        </button>
+        </button>}
         <button (click)="toggleMenu()" type="button" class="inline-flex items-center justify-center ms-3 p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
           <span class="sr-only">Ouvrir le menu principal</span>
           <!-- Icône menu (quand fermé) -->
@@ -114,6 +117,7 @@
         </div>
         <div class="ml-3">
           <div class="text-base font-medium text-gray-800">{{ currentUser().firstName |titlecase }} {{currentUser().lastName | titlecase}}</div>
+          <div class="text-base font-medium text-gray-600">{{ currentUser().email}}</div>
         </div>
         <button class="ml-auto flex-shrink-0 bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="sr-only">Voir les notifications</span>

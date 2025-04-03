@@ -71,7 +71,12 @@ export class RegisterComponent {
               this.UserLogin=response
               console.log(this.UserLogin);
               if (this.UserLogin.status==200) {
-                let currentUser:CurrentUser=this.UserLogin.user
+                let currentUser:CurrentUser={
+                  firstName:this.UserLogin.user.firstName,
+                  lastName:this.UserLogin.user.lastName,
+                  email:this.UserLogin.user.email,
+                  role:this.UserLogin.role
+                }
                 this.loginService.user.set(currentUser);
                 this.loginService.login.set(true);// Connexion réussie - rediriger vers le tableau de bord
                 this.router.navigate(['/']);

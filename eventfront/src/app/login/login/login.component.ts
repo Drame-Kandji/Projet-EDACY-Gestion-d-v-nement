@@ -4,6 +4,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginServiceService } from '../../services/login-service.service';
+import { UserConnected } from '../../interfaces/user-connected';
+import { Login } from '../../interfaces/login';
 
 @Component({
   selector: 'app-login',
@@ -50,7 +52,8 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         const email = this.loginForm.get('email')?.value;
         const password = this.loginForm.get('password')?.value;
-
+        const login_password:Login=this.loginForm.value;
+        this.service.loginUser(login_password)
         if (email === 'ndongombathie70@gmail.com' && password === '042002') {
           this.service.login.set(true)
           this.router.navigate(['/']);
