@@ -21,7 +21,7 @@ class UserController extends Controller
 
     return response()->json([
         'status' => 200,
-        'message' => "Rôle '{$request->role}' attribué avec succès à {$user->name}"
+        'message' => "Rôle '{$request->role}' attribué avec succès à {$user}"
     ]);
 }
 

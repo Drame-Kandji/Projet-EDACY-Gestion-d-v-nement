@@ -28,6 +28,5 @@ class RoleSeeder extends Seeder
         $admin->givePermissionTo(['create events', 'edit events', 'delete events', 'view events', 'register for events']);
         $user->givePermissionTo(['view events', 'register for events']);
 
-
     }
 }

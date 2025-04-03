@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function login(){
-        
+
         $credentials= request(['email', 'password']);
         if(!$token = Auth::attempt($credentials)){
             return response()->json([
@@ -34,22 +34,26 @@ class AuthController extends Controller
     }
 
     public function register(AuthRequest $request){
+       // return $request->validated();
        try{
             $user = User::create($request->validated());
-
+            //return $user;
             if(!$user){
                 return response()->json([
                     'message' => 'Echec de l\'inscription',
 
                 ]);
             }
-            if(!$user->hasRole( 'user')){
-                $user->assignRole('user');
+            if(!$user->hasRole( roles: 'user')){
+                $user->assignRole(roles: 'user');
             }
             return response()->json([
+                'status'=>200,
                 'message' => 'Inscription reussi',
-                'user' => $user,
-                'role' => $user->getRoleNames(),
+                'user' => ['firstName'=>$user->firstName,
+                'lastName'=>$user->lastName,
+                'email'=>$user->email],
+                'role' => $user->getRoleNames()[0],
 
             ]);
        }catch(Exception $e){
