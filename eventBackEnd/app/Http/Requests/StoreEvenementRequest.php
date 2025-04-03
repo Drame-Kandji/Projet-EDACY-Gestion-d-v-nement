@@ -32,4 +32,10 @@ class StoreEvenementRequest extends FormRequest
             'attendees' => 'nullable|numeric|min:0',
         ];
     }
+
+    public function messages()
+    {
+        
+    }
 }
+

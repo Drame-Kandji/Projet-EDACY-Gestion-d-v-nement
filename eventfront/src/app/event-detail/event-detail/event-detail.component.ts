@@ -18,10 +18,10 @@ export class EventDetailComponent implements OnInit{
    description:boolean=true
 
    ngOnInit(): void {
-    this.LoadEvent();
+      this.LoadEvent();
    }
 
-   LoadEvent():void
+   LoadEvent()
    {
     let id:string|null=this.route.snapshot.paramMap.get('id');
     this.eventService.getEvent(id).subscribe((event: SuccesEvent) => {

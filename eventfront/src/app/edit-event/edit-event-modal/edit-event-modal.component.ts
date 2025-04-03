@@ -94,7 +94,7 @@ export class EditEventModalComponent implements OnInit {
 
         // Si une nouvelle image a été chargée, utiliser le preview
         // sinon, garder l'image existante
-        if (this.imagePreview && !formData.image) {
+        if (this.imagePreview && formData.image) {
           formData.image = this.imagePreview;
         }
 
@@ -109,6 +109,7 @@ export class EditEventModalComponent implements OnInit {
 
   onFileChange(event: any): void {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {

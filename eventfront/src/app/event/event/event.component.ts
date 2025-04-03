@@ -14,6 +14,7 @@ import { EventServiceService } from '../../services/event-service.service';
   styleUrl: './event.component.css'
 })
 export class EventComponent {
+
   @Input() event!:Event;
   @Input() description:boolean=true;
   @Output() UpdateEvent = new EventEmitter<Event>();
@@ -46,4 +47,7 @@ export class EventComponent {
     //console.log(id);
   }
 
+  inscrire(event:Event) {
+    console.log('inscription................',event.id);
+  }
 }
