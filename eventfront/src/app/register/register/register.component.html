@@ -157,6 +157,7 @@
             </div>
             <div *ngIf="loginForm.get('confirmed_password')?.invalid && loginForm.get('confirmed_password')?.touched" class="mt-1 text-sm text-red-600">
               <div *ngIf="loginForm.get('confirmed_password')?.errors?.['required']">confirmer le mot de passe .</div>
+              <div *ngIf="loginForm.get('confirmed_password')!=loginForm.get('password')">confirmation non comforme</div>
             </div>
           </div>
 

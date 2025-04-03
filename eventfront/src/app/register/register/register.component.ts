@@ -2,6 +2,12 @@ import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { log } from 'node:console';
+import { User } from '../../interfaces/user';
+import e, { response } from 'express';
+import { LoginServiceService } from '../../services/login-service.service';
+import { LoginSucces } from '../../interfaces/login-succes';
+import { CurrentUser } from '../../interfaces/current-user';
 
 
 @Component({
@@ -15,6 +21,7 @@ export class RegisterComponent {
     isLoading = false;
     loginError = '';
     isPasswordVisible = false;
+    UserLogin!:LoginSucces;
 
     // Pour l'animation
     formOpacity = 0;
@@ -22,15 +29,15 @@ export class RegisterComponent {
 
     constructor(
       private fb: FormBuilder,
-      private router: Router
+      private router: Router,
+      private loginService:LoginServiceService
     ) {
       this.loginForm = this.fb.group({
-        lastname:['',Validators.required],
         firstname:['',Validators.required],
+        lastname:['',Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
         confirmed_password:['',Validators.required]
-
       });
     }
 
@@ -43,22 +50,38 @@ export class RegisterComponent {
     }
 
     onSubmit(): void {
-      if (this.loginForm.valid) {
+      if (this.loginForm.valid && (this.loginForm.get('password')?.value===this.loginForm.get('confirmed_password')?.value)) {
         this.isLoading = true;
         this.loginError = '';
-
+        console.log(this.loginForm.value)
         // Simuler une requête d'authentification
         setTimeout(() => {
+          const firstname=this.loginForm.get('firstname')?.value;
+          const lastname=this.loginForm.get('lastname')?.value;
           const email = this.loginForm.get('email')?.value;
           const password = this.loginForm.get('password')?.value;
-
-          if (email === 'admin@evenements.com' && password === 'password123') {
-            // Connexion réussie - rediriger vers le tableau de bord
-            this.router.navigate(['/dashboard']);
-          } else {
-            // Échec de connexion
-            this.loginError = 'Identifiants incorrects. Veuillez réessayer.';
+          const user:User={firstName:firstname,
+            lastName:lastname,
+            email:email,
+            password:password
           }
+          //console.log(user)
+          this.loginService.register(user).subscribe(
+            (response)=>{
+              this.UserLogin=response
+              console.log(this.UserLogin);
+              if (this.UserLogin.status==200) {
+                let currentUser:CurrentUser=this.UserLogin.user
+                this.loginService.user.set(currentUser);
+                this.loginService.login.set(true);// Connexion réussie - rediriger vers le tableau de bord
+                this.router.navigate(['/']);
+              }
+              else {
+                // Échec de connexion
+                this.loginError = 'Veuillez réessayer.';
+              }
+            }
+          )
 
           this.isLoading = false;
         }, 1500);
