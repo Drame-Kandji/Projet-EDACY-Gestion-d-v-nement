@@ -77,8 +77,7 @@ export class RegisterComponent {
                   email:this.UserLogin.user.email,
                   role:this.UserLogin.role
                 }
-                this.loginService.user.set(currentUser);
-                this.loginService.login.set(true);// Connexion réussie - rediriger vers le tableau de bord
+                this.loginService.user.set(currentUser);// Connexion réussie - rediriger vers le tableau de bord
                 this.router.navigate(['/']);
               }
               else {

@@ -38,7 +38,8 @@ export class NavbarComponent implements OnInit {
         const user:any=localStorage.getItem('user')
         console.log(JSON.parse(user));
         this.currentUser=JSON.parse(user)
-        console.log(JSON.parse(login));
+        //console.log(JSON.parse(login));
+        //this.ngOnInit()
       }
     });
   }
@@ -59,8 +60,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    // Implémentez la logique de déconnexion ici
-    this.service.setUser(0,false);
+    //Implémentez la logique de déconnexion ici
+     this.service.setUser(0,0);
     //this.route.navigate(['/connexion']);
     console.log('Utilisateur déconnecté');
   }

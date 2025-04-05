@@ -12,7 +12,7 @@ import { json } from 'express';
   providedIn: 'root'
 })
 export class LoginServiceService {
-  login=signal(false);
+  login=signal<any>(null);
   http=inject(HttpClient);
   api_url='http://localhost:8000/api'
   create_event=signal(false);
@@ -39,7 +39,7 @@ export class LoginServiceService {
     return this.http.post<LoginSucces>(`${this.api_url}/register`,user)
   }
 
-  setUser(user:any=0,login:boolean){
+  setUser(user:any=0,login:number){
     this.user.set(user)
     this.login.set(login)
     localStorage.setItem('user',JSON.stringify(user))
