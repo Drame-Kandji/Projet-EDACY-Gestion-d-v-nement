@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+/**
+ * @method \Illuminate\Support\Collection getRoleNames()
+ */
 
 class User extends Authenticatable
 {

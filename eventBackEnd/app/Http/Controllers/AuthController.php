@@ -18,9 +18,15 @@ class AuthController extends Controller
                 'message' => 'Erreur de connexion'
             ]);
         }
+        $user=Auth::user();
         return response()->json([
             'token' => $token,
-            'user' => Auth::user(),
+            'user' => [
+                'firstName'=>$user->firstName,
+                'lastName'=>$user->lastName,
+                'email'=>$user->email,
+                'role'=>$user->id
+        ],
             'message' => 'Connnexion reussi'
         ]);
     }
