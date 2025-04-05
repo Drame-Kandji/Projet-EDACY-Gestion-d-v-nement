@@ -4,6 +4,7 @@ import { Route, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { EditEventModalComponent } from "../../edit-event/edit-event-modal/edit-event-modal.component";
 import { DatePipe } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
+import { LoginServiceService } from '../../services/login-service.service';
 
 
 
@@ -24,8 +25,23 @@ export class EventComponent {
 
   isModalOpen = false;
   selectedEvent: Event | null = null;
+  currentUser: any={
+    firstName: '',
+    lastName: '',
+    email: '',
+    role:''
+  };;
 
-  constructor(private eventService:EventServiceService,private route:Router){}
+  constructor(private eventService:EventServiceService,private route:Router,private service:LoginServiceService){
+
+    effect(() => {
+      this.service.login();
+        const user:any=localStorage.getItem('user')
+        console.log(JSON.parse(user));
+        this.currentUser=JSON.parse(user)
+    });
+
+  }
 
   openEditModal(event: Event): void {
     this.selectedEvent = { ...event };

@@ -8,6 +8,7 @@ import { EventDetailComponent } from './event-detail/event-detail/event-detail.c
 import { EventsComponent } from './events/events/events.component';
 import { EditEventModalComponent } from './edit-event/edit-event-modal/edit-event-modal.component';
 import { CalendarPageComponent } from './calendrier/calendar-page/calendar-page.component';
+//import { AttendeesListComponent } from './genererPDF/attendees-list/attendees-list.component';
 
 export const routes: Routes = [
   {path:'',component:HomeComponent},
@@ -16,4 +17,5 @@ export const routes: Routes = [
   {path:'event/:id',component:EventDetailComponent},
   {path:'events',component:EventsComponent},
   //{path:'calendrier',component:CalendarPageComponent}
+ // {path:'/genererpdf',component:AttendeesListComponent}
 ];
