@@ -53,14 +53,19 @@ export class LoginComponent implements OnInit {
         const email = this.loginForm.get('email')?.value;
         const password = this.loginForm.get('password')?.value;
         const login_password:Login=this.loginForm.value;
-        this.service.loginUser(login_password)
-        if (email === 'ndongombathie70@gmail.com' && password === '042002') {
-          this.service.login.set(true)
-          this.router.navigate(['/']);
-        } else {
-          // Échec de connexion
-          this.loginError = 'Identifiants incorrects. Veuillez réessayer.';
-        }
+        this.service.loginUser(login_password).subscribe(
+          (data)=>{
+            if (data.token) {
+              this.service.user.set(data.user)
+              this.service.login.set(true)
+              this.router.navigate(['/']);
+            } else {
+              // Échec de connexion
+              this.loginError = 'Identifiants incorrects. Veuillez réessayer.';
+            }
+          }
+        )
+
 
         this.isLoading = false;
       }, 1500);
