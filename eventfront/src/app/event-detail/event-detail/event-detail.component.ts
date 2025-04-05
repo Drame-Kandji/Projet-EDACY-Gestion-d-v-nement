@@ -14,7 +14,17 @@ import { Succes, SuccesEvent } from '../../interfaces/succes';
 export class EventDetailComponent implements OnInit{
    private route=inject(ActivatedRoute);
    constructor(private eventService:EventServiceService) { }
-   event!:Event;
+   event:Event={
+     id: 0,
+     title: '',
+     description: '',
+     date: '',
+     location: '',
+     heure: '',
+     image: '',
+     category: '',
+     attendees: 0
+   };
    description:boolean=true
 
    ngOnInit(): void {
