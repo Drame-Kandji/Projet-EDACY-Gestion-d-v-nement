@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { LoginSucces } from '../interfaces/login-succes';
 import { CurrentUser } from '../interfaces/current-user';
 import { UserConnected } from '../interfaces/user-connected';
+import { json } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,12 @@ export class LoginServiceService {
   }
   register(user:User):Observable<LoginSucces>{
     return this.http.post<LoginSucces>(`${this.api_url}/register`,user)
+  }
+
+  setUser(user:any=0,login:boolean){
+    this.user.set(user)
+    this.login.set(login)
+    localStorage.setItem('user',JSON.stringify(user))
+    localStorage.setItem('login',JSON.stringify(login))
   }
 }

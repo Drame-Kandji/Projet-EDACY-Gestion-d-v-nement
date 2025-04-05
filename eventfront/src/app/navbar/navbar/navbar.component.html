@@ -39,7 +39,7 @@
         </button>
 
         <!-- Bouton de création d'événement -->
-         @if (currentUser().role=='admin') {
+         @if (currentUser.role=='admin') {
           <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
             Créer un événement
           </button>
@@ -73,7 +73,7 @@
 
       <!-- Bouton menu mobile -->
       <div class="-mr-2 flex items-center sm:hidden">
-        @if (currentUser().role=='admin') {
+        @if (currentUser.role=='admin') {
         <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
           Créer un événement
         </button>}
@@ -116,8 +116,8 @@
           <img class="h-10 w-10 rounded-full" [src]="avatar" alt="">
         </div>
         <div class="ml-3">
-          <div class="text-base font-medium text-gray-800">{{ currentUser().firstName |titlecase }} {{currentUser().lastName | titlecase}}</div>
-          <div class="text-base font-medium text-gray-600">{{ currentUser().email}}</div>
+          <div class="text-base font-medium text-gray-800">{{ currentUser.firstName |titlecase }} {{currentUser.lastName | titlecase}}</div>
+          <div class="text-base font-medium text-gray-600">{{ currentUser.email}}</div>
         </div>
         <button class="ml-auto flex-shrink-0 bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="sr-only">Voir les notifications</span>
