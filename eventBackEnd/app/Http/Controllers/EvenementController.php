@@ -6,6 +6,9 @@ use App\Models\Evenement;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class EvenementController extends Controller
 {
@@ -185,4 +188,38 @@ class EvenementController extends Controller
         'data' => $evenements
     ]);
     }
+
+
+
+    // Liste des événements de l'utilisateur connecté
+    public function mesEvenements()
+    {
+        $user = Auth::user();
+        return response()->json([
+            'evenements' => $user->evenements
+        ]);
+    }
+
+
+    public function inscrire($id)
+{
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    }
+
+    $evenement = Evenement::find($id);
+    if (!$evenement) {
+        return response()->json(['message' => 'Événement non trouvé'], 404);
+    }
+
+    if (!$user->evenements->contains($evenement->id)) {
+        $user->evenements()->attach($evenement->id);
+    } else {
+        return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+    }
+
+    return response()->json(['message' => 'Inscription réussie à l’événement']);
+}
+
 }
