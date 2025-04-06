@@ -40,7 +40,12 @@ class EvenementController extends Controller
     {
         try {
             // dd($request->validated());
-            $evenement = Evenement::create($request->validated());
+            $data=$request->validated();
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('evenements', 'public');
+                $data['image'] = $imagePath; // on ajoute le chemin à sauvegarder en BDD
+            }
+            $evenement = Evenement::create($data);
             return response()->json([
                 'status' => 200,
                 'message' => 'Evenement créé avec succés',
@@ -88,9 +93,14 @@ class EvenementController extends Controller
     {
         //dd($request->all());
         try {
+            $data=$request->validated();
             $evenement = Evenement::findOrFail($id);
             if ($evenement) {
-                $evenement->update($request->all());
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('evenements', 'public');
+                $data['image'] = $imagePath; // on ajoute le chemin à sauvegarder en BDD
+            }
+                $evenement->update($data);
                 return response()->json([
                     'status' => 200,
                     'message' => 'Evenement mis à jour avec succés',

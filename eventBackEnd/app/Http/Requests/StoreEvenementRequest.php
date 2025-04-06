@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Mockery\Undefined;
 
 class StoreEvenementRequest extends FormRequest
 {
@@ -21,6 +22,7 @@ class StoreEvenementRequest extends FormRequest
      */
     public function rules(): array
     {
+       // $user=Undefined;
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -32,7 +34,6 @@ class StoreEvenementRequest extends FormRequest
             'attendees' => 'nullable|numeric|min:0',
         ];
     }
-
     /* public function messages()
     {
 
