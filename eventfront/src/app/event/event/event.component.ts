@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, Input, Output,EventEmitter } from 
 import { Event } from '../../interfaces/event';
 import { Route, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { EditEventModalComponent } from "../../edit-event/edit-event-modal/edit-event-modal.component";
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
 import { LoginServiceService } from '../../services/login-service.service';
 
@@ -11,7 +11,7 @@ import { LoginServiceService } from '../../services/login-service.service';
 
 @Component({
   selector: 'app-event',
-  imports: [RouterLink, RouterLinkActive, EditEventModalComponent,DatePipe],
+  imports: [RouterLink, RouterLinkActive, EditEventModalComponent,DatePipe,NgClass],
   templateUrl: './event.component.html',
   styleUrl: './event.component.css'
 })
