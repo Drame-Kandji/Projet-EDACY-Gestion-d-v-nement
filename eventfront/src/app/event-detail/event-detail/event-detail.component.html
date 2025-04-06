@@ -1,5 +1,6 @@
 <div class="my-8 lg:my-8 h-full lg:w-180 lg:m-auto sm:w-50 mx-2">
-  <app-event [event]="event" [description]="false"/>
+  <app-event [event]="event" [description]="false" (refresh)="refresh()"/>
+  @if (user.role=='admin') {
   @for (part of participant; track part.id)
   {
   <div class="border border-gray-500 rounded-xl h-20 mt-4 flex items-center shadow-xl">
@@ -11,6 +12,6 @@
       <p class=" text-gray-400">{{part.email}}</p>
     </div>
   </div>
-  }
+  }}
 </div>
 

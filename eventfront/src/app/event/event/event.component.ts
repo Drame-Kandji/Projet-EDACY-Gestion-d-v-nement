@@ -24,6 +24,7 @@ export class EventComponent {
   @Input() description:boolean=true;
   @Output() UpdateEvent = new EventEmitter<FormData>();
   @Output() DeleteEvent = new EventEmitter<number>();
+  @Output() refresh= new EventEmitter<void>()
   signup:boolean=false;
   eventService=inject(EventServiceService);
 
@@ -94,6 +95,7 @@ export class EventComponent {
           console.log(response);
         }
       )
+      this.refresh.emit()
       console.log('inscription................',inofs);
     }
   }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Event } from '../../interfaces/event';
 import { EventComponent } from "../../event/event/event.component";
@@ -6,6 +6,7 @@ import { EventServiceService } from '../../services/event-service.service';
 import { Succes, SuccesEvent } from '../../interfaces/succes';
 import { response } from 'express';
 import { Participant } from '../../interfaces/participant';
+import { LoginServiceService } from '../../services/login-service.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -14,9 +15,11 @@ import { Participant } from '../../interfaces/participant';
   styleUrl: './event-detail.component.css'
 })
 export class EventDetailComponent implements OnInit{
-   private route=inject(ActivatedRoute);
-   participant:any=[]
-   constructor(private eventService:EventServiceService) { }
+  private route=inject(ActivatedRoute);
+  user:any=localStorage.getItem('user')
+  participant:any=[];
+   constructor(private eventService:EventServiceService) {
+    }
    event:Event={
      id: 0,
      title: '',
@@ -32,6 +35,7 @@ export class EventDetailComponent implements OnInit{
 
    ngOnInit(): void {
       this.LoadEvent();
+      this.user=JSON.parse(this.user);
    }
 
    LoadEvent()
@@ -50,8 +54,12 @@ export class EventDetailComponent implements OnInit{
         (response:Participant)=>{
          this.participant=response.participants
          console.log(this.participant);
-
+         //this.ngOnInit()
         }
       )
    }
+
+  refresh() {
+    this.LoadEvent()
+    }
 }
