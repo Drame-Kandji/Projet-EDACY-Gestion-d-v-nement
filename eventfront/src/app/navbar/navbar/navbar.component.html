@@ -40,7 +40,7 @@
         </button>}
 
         <!-- Bouton de création d'événement -->
-         @if (currentUser.role) {
+         @if (currentUser.role=='admin') {
           <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
             Créer un événement
           </button>
@@ -73,7 +73,7 @@
 
       <!-- Bouton menu mobile -->
       <div class="-mr-2 flex items-center sm:hidden">
-        @if (currentUser.role) {
+        @if (currentUser.role=='admin') {
         <button (click)="create_event()" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
           Créer un événement
         </button>}

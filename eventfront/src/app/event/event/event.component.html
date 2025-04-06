@@ -42,7 +42,7 @@
     }
     <div class="mt-4 space-x-0.5 flex justify-between items-center">
       @if (description) {
-        @if(currentUser.role){
+        @if(currentUser.role=='admin'){
         <span class="text-sm text-gray-500">{{ event.attendees }} participants</span>
       <button (click)="openEditModal(event)" class="w-16 sm:w-18 inline-flex items-center px-1 sm:px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-yellow-500 hover:bg-yellow-600">
         Modifier

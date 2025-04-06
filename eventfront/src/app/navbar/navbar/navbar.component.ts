@@ -36,8 +36,10 @@ export class NavbarComponent implements OnInit {
         const login:any=localStorage.getItem('login')
         this.isLoggedIn=JSON.parse(login)
         const user:any=localStorage.getItem('user')
-        console.log(JSON.parse(user));
+        //console.log(this.currentUser);
         this.currentUser=JSON.parse(user)
+        console.log(this.currentUser);
+
         //console.log(JSON.parse(login));
         //this.ngOnInit()
       }
