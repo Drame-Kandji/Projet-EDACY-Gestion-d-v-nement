@@ -5,6 +5,7 @@ import { EditEventModalComponent } from "../../edit-event/edit-event-modal/edit-
 import { DatePipe, NgClass } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
 import { LoginServiceService } from '../../services/login-service.service';
+import { log } from 'node:console';
 
 
 
@@ -19,7 +20,7 @@ export class EventComponent {
 
   @Input() event!:Event;
   @Input() description:boolean=true;
-  @Output() UpdateEvent = new EventEmitter<Event>();
+  @Output() UpdateEvent = new EventEmitter<FormData>();
   @Output() DeleteEvent = new EventEmitter<number>();
   signup:boolean=false;
 
@@ -31,8 +32,9 @@ export class EventComponent {
     email: '',
     role:''
   };;
+  image:string= 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsZKe0dmRCFFxubB06zPpvPgSr9BHpvIIOXA&s'//'../../assets/images/conference.jpg';
 
-  constructor(private eventService:EventServiceService,private route:Router,private service:LoginServiceService){
+  constructor(private route:Router,private service:LoginServiceService){
 
     effect(() => {
       this.service.login();
@@ -55,7 +57,7 @@ export class EventComponent {
     this.selectedEvent = null;
   }
 
-  saveEvent(eventData: Event): void {
+  saveEvent(eventData: FormData): void {
     //console.log(eventData);
     this.UpdateEvent.emit(eventData);
   }
@@ -74,5 +76,10 @@ export class EventComponent {
       this.route.navigate(['/connexion'])
     }
     console.log('inscription................',this.signup);
+  }
+
+  getImageUrl(path: string): string {
+    //console.log(path)
+    return `http://localhost:8000/storage/${path}`;
   }
 }

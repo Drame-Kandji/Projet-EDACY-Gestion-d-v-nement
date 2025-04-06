@@ -30,9 +30,7 @@ export class EventsComponent {
       this.openCreateModal(this.loginService.create_event());
       console.log('creation..........');
     });
-
   }
-
    ngOnInit(): void {
        // données d'événements depuis une API
        this.loadEvents();
@@ -79,8 +77,10 @@ export class EventsComponent {
         this.selectedEvent = null;
       }
 
-      UpdateEvent(event:Event){
-       this.eventService.updateEvent(event).subscribe(
+      UpdateEvent(event:FormData,id:number){
+        event.append('_method', 'PATCH');
+       console.log(event);
+       this.eventService.updateEvent(event,id).subscribe(
         (data)=>{
           console.log(data);
           this.loadEvents();
@@ -100,7 +100,8 @@ export class EventsComponent {
         }
       }
 
-      saveEvent(eventData: Event): void {
+      saveEvent(eventData: FormData): void {
+        eventData.append('_method', 'POST');
         console.log(eventData);
         this.eventService.saveEvent(eventData).subscribe(
           (data)=>{

@@ -42,7 +42,7 @@
         @for (event of filteredEvents; track event.id) {
           <app-event
            [event]="event" [description]="true"
-           (UpdateEvent)="UpdateEvent($event)"
+           (UpdateEvent)="UpdateEvent($event,event.id)"
            (DeleteEvent)="DeleteEvent($event)"
            >
           </app-event>

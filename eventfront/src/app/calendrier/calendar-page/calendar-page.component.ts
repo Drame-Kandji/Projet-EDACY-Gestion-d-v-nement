@@ -194,9 +194,9 @@ export class CalendarPageComponent implements OnInit {
     this.isEventModalOpen = false;
   }
 
-  handleEventSaved(eventData: Event): void
+  handleEventSaved(eventData: FormData): void
   {
-    
+
   }
 
   findDayByDate(date: Date): CalendarDay | undefined {
