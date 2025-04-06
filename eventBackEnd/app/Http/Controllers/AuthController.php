@@ -22,8 +22,12 @@ class AuthController extends Controller
         $role = $user->roles;
         return response()->json([
             'token' => $token,
-            'user' => $user,
-            'role' => $role[0]->name,
+            'user' => [
+                'firstName'=>$user->firstName,
+                'lastName'=>$user->lastName,
+                'email'=>$user->email,
+                'role' => $role[0]->name,
+            ],
             'message' => 'Connnexion reussi'
         ]);
     }
