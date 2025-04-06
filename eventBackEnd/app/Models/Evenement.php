@@ -19,4 +19,10 @@ class Evenement extends Model
         'attendees'
 
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
 }
