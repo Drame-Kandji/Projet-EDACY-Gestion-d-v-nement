@@ -24,7 +24,9 @@ export class LoginServiceService {
     role:''
   })
 
-  constructor() { }
+  constructor() {
+    //localStorage.setItem('inscrit','false');
+   }
 
   loginUser(user:Login):Observable<UserConnected>{
    return this.http.post<UserConnected>(`${this.api_url}/login`,user)
@@ -38,6 +40,8 @@ export class LoginServiceService {
   register(user:User):Observable<LoginSucces>{
     return this.http.post<LoginSucces>(`${this.api_url}/register`,user)
   }
+
+
 
   setUser(user:any=0,login:number){
     this.user.set(user)

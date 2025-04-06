@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Event } from '../interfaces/event';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { Succes, SuccesEvent } from '../interfaces/succes';
+import { Inscrire } from '../interfaces/inscrire';
+import { Participant } from '../interfaces/participant';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +44,13 @@ export class EventServiceService {
       'Content-Type': 'application/json',
     });
     return this.http.post<SuccesEvent>(`${this.api_url}/${id}`,event)
+  }
+
+  inscrire(infos:Inscrire){
+    return this.http.post<SuccesEvent>(`${this.api_url}/inscrire`,infos)
+  }
+
+  participants(idevent:string|null):Observable<Participant>{
+   return this.http.get<Participant>(`${this.api_url}/${idevent}/participants`)
   }
 }

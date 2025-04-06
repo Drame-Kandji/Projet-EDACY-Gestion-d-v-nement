@@ -52,7 +52,7 @@ class AuthController extends Controller
                 ]);
             }
             if(!$user->hasRole( roles: 'user')){
-                $user->assignRole(roles: 'user');
+                $user->assignRole(roles: 'admin');
             }
             return response()->json([
                 'status'=>200,

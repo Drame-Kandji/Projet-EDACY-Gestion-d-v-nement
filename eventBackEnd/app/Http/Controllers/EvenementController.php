@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateEvenementRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\returnSelf;
 
 class EvenementController extends Controller
 {
@@ -210,26 +211,38 @@ class EvenementController extends Controller
         ]);
     }
 
-
-    public function inscrire($id)
-{
-    $user = Auth::user();
-    if (!$user) {
-        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    public function participants($id)
+    {
+        $evenement = Evenement::with('users')->find($id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+        return response()->json([
+            'message' => 'Liste des participants',
+            'participants' =>$evenement->users// ou juste 'data'
+        ]);
     }
 
-    $evenement = Evenement::find($id);
-    if (!$evenement) {
-        return response()->json(['message' => 'Événement non trouvé'], 404);
-    }
+    public function inscrire(Request $request)
+    {
+        //return $request->all();
+        $user = User::where('email',$request->email)->first();
+        //return Evenement::find($request->id) ;
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        }
 
-    if (!$user->evenements->contains($evenement->id)) {
-        $user->evenements()->attach($evenement->id);
-    } else {
-        return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
-    }
+        $evenement = Evenement::find($request->id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+        if (!$user->evenements->contains($evenement->id)) {
+            $user->evenements()->attach($evenement->id);
+        } else {
+            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+        }
 
-    return response()->json(['message' => 'Inscription réussie à l’événement']);
-}
+        return response()->json(['message' => 'Inscription réussie à l’événement']);
+    }
 
 }

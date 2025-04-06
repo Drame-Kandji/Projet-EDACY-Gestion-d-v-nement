@@ -11,7 +11,6 @@ use App\Http\Controllers\UserController;
 // })->middleware('auth:sanctum');
 
 
-
 Route::apiResource('evenements', EvenementController::class);
 Route::get('/search', [EvenementController::class, 'search']);
 Route::get('/filter', [EvenementController::class, 'filter']);
@@ -22,7 +21,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::post('/role/{id}', [UserController::class, 'assignRole']);
 Route::get('/monrole', [UserController::class, 'checkRole']);
 
-Route::post('/evenement/{id}/inscrire', [EvenementController::class, 'inscrire']);
-Route::post('/evenement/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
+Route::post('/evenements/inscrire', [EvenementController::class, 'inscrire']);
+Route::post('/evenements/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
 Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
+Route::get('/evenements/{id}/participants',[EvenementController::class,'participants']);
 

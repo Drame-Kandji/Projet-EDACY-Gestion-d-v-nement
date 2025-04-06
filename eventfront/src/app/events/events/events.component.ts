@@ -8,6 +8,7 @@ import { LoginServiceService } from '../../services/login-service.service';
 import { EventServiceService } from '../../services/event-service.service';
 import { Succes, SuccesEvent } from '../../interfaces/succes';
 import { log } from 'console';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-events',
   imports: [EventComponent, NgIf, NgClass, NgFor, FormsModule, EditEventModalComponent],
@@ -25,10 +26,10 @@ export class EventsComponent {
 
   selectedEvent: Event | null = null;
 
-  constructor(private eventService:EventServiceService) {
+  constructor(private eventService:EventServiceService,private route :Router) {
     effect(() => {
       this.openCreateModal(this.loginService.create_event());
-      console.log('creation..........');
+      console.log('creation..........event');
     });
   }
    ngOnInit(): void {
@@ -70,6 +71,7 @@ export class EventsComponent {
        openCreateModal(response:boolean): void {
          this.selectedEvent = null;
          this.isModalOpen = response;
+         //this.route.navigate(['/events']);
        }
        closeModal(): void {
         this.isModalOpen = false;

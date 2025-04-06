@@ -6,6 +6,8 @@ import { DatePipe, NgClass } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
 import { LoginServiceService } from '../../services/login-service.service';
 import { log } from 'node:console';
+import { Inscrire } from '../../interfaces/inscrire';
+import { response } from 'express';
 
 
 
@@ -23,6 +25,7 @@ export class EventComponent {
   @Output() UpdateEvent = new EventEmitter<FormData>();
   @Output() DeleteEvent = new EventEmitter<number>();
   signup:boolean=false;
+  eventService=inject(EventServiceService);
 
   isModalOpen = false;
   selectedEvent: Event | null = null;
@@ -69,13 +72,30 @@ export class EventComponent {
 
   inscrire(event:Event) {
     this.signup=!this.signup
-    const logion:any=localStorage.getItem('login')
+    const logion:any=localStorage.getItem('login');
+    let user:any=localStorage.getItem('user');
     //si l'utilisateur n'est pas authentifier
     if(!parseInt(logion)){
       console.log(logion);
-      this.route.navigate(['/connexion'])
+      this.route.navigate(['/connexion']);
     }
-    console.log('inscription................',this.signup);
+    else
+    {
+      console.log(user);
+      user=JSON.parse(user)
+      const inofs:Inscrire={
+        id:event.id,
+        email:user.email
+      }
+      console.log(inofs);
+
+      this.eventService.inscrire(inofs).subscribe(
+        (response)=>{
+          console.log(response);
+        }
+      )
+      console.log('inscription................',inofs);
+    }
   }
 
   getImageUrl(path: string): string {
