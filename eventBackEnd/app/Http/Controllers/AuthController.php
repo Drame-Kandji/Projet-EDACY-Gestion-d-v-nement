@@ -63,9 +63,12 @@ class AuthController extends Controller
                 'role' => $user->getRoleNames()[0],
 
             ]);
-       }catch(Exception $e){
+       }
+       catch(\Throwable $e){
             return response()->json([
-                $e->getMessage()
+                'statuts'=>422,
+                'message' => 'Echec de l\'inscription',
+                'error' => $e->getMessage(),
             ]);
        }
     }
