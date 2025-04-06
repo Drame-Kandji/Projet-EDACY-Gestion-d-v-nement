@@ -82,7 +82,7 @@ export class RegisterComponent {
               }
               else {
                 // Échec de connexion
-                this.loginError = 'Veuillez réessayer.';
+                this.loginError = 'Vous étez déja inscrit.';
               }
             }
           )
