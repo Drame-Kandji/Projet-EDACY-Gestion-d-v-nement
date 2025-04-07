@@ -195,6 +195,7 @@ class EvenementController extends Controller
         }
 
         if (!$user->evenements->contains($evenement->id)) {
+            //ceci n'est pas une erreur, je répéte cci n'est pas une erreur
             $user->evenements()->attach($evenement->id);
 
              Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
