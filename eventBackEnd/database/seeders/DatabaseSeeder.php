@@ -37,13 +37,19 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             "firstName"=> "talla",
             "lastName"=> "diop",
-            "email"=>"talla.mbath@univ-thies.sn",
+            "email"=>"talla.diop1@univ-thies.sn",
             "password"=>"ndongo042002"
         ])->assignRole('user');
         User::factory()->create([
             "firstName"=> "ndongo",
             "lastName"=> "mbathie",
             "email"=>"ndongo1.mbath@univ-thies.sn",
+            "password"=>"ndongo042002"
+        ])->assignRole('user');
+        User::factory()->create([
+            "firstName"=> "Talla",
+            "lastName"=> "Diop",
+            "email"=>"tallaadiop750@gmail.com",
             "password"=>"ndongo042002"
         ])->assignRole('user');
     }

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmationInscription;
 use App\Models\Evenement;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail;
 
 class EvenementController extends Controller
 {
@@ -202,24 +203,77 @@ class EvenementController extends Controller
 
 
     public function inscrire($id)
-{
-    $user = Auth::user();
-    if (!$user) {
-        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    {
+        $user = Auth::user();
+        $roles = $user->roles;
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        }
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'ID invalide'], 400);
+        }
+
+
+        $evenement = Evenement::find($id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+
+        // if (!$user->evenements->contains($evenement->id)) {
+        //     $user->evenements()->attach($evenement->id);
+        //     // Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
+        //     Mail::raw('Test Laravel mail vers Gmail', function ($message) {
+        //         $message->to('dramealiou13460@gmail.com')
+        //                 ->subject('Ceci est un test');
+        //     });
+        // } else {
+        //     return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+        // }
+
+        // return response()->json(['message' => 'Inscription réussie à l’événement']);
+
+        if (!$user->evenements->contains($evenement->id)) {
+            $user->evenements()->attach($evenement->id);
+
+            // Envoi de l'email en mode 'log' pour tester
+            // Mail::raw('Test Laravel mail vers Gmail', function ($message) use ($user) {
+            //     $message->to('aliou.drame@univ-thies.sn')
+            //             ->subject('Ceci est un test');
+            // });
+
+            // Optionnel : Si tu veux tester plus proprement, tu peux utiliser un mail personnalisé avec un Mailable
+             Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
+
+            return response()->json(['message' => 'Inscription réussie et email envoyé']);
+        } else {
+            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+        }
+
     }
 
-    $evenement = Evenement::find($id);
-    if (!$evenement) {
-        return response()->json(['message' => 'Événement non trouvé'], 404);
+    public function desinscrire($id)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        }
+
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'ID invalide'], 400);
+        }
+
+        $evenement = Evenement::find($id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+
+        if ($user->evenements->contains($evenement->id)) {
+            $user->evenements()->detach($evenement->id);
+            return response()->json(['message' => 'Désinscription réussie de l\'événement']);
+        } else {
+            return response()->json(['message' => 'Utilisateur non inscrit à cet événement'], 400);
+        }
     }
 
-    if (!$user->evenements->contains($evenement->id)) {
-        $user->evenements()->attach($evenement->id);
-    } else {
-        return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
-    }
-
-    return response()->json(['message' => 'Inscription réussie à l’événement']);
-}
 
 }

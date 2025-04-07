@@ -22,7 +22,13 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::post('/role/{id}', [UserController::class, 'assignRole']);
 Route::get('/monrole', [UserController::class, 'checkRole']);
 
-Route::post('/evenement/{id}/inscrire', [EvenementController::class, 'inscrire']);
-Route::post('/evenement/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
-Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
+// Route::post('/evenement/{id}/inscrire', [EvenementController::class, 'inscrire']);
+// Route::post('/evenement/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
+// Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
 
+Route::middleware('auth:api')->group(function () {
+    Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
+    Route::post('/evenement/{id}/inscrire', [EvenementController::class, 'inscrire']);
+    Route::post('/evenement/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
+
+});

@@ -7,26 +7,34 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function login(){
+    public function login()
+{
+    $credentials = request(['email', 'password']);
 
-        $credentials= request(['email', 'password']);
-        if(!$token = Auth::attempt($credentials)){
-            return response()->json([
-                'message' => 'Erreur de connexion'
-            ]);
+    try {
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['message' => 'Erreur de connexion'], 401);
         }
-        $user=Auth::user();
-        $role = $user->roles;
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-            'role' => $role[0]->name,
-            'message' => 'Connnexion reussi'
-        ]);
+    } catch (JWTException $e) {
+        return response()->json(['message' => 'Impossible de créer le token'.$e->getMessage()], 500);
     }
+
+    $user = Auth::user();
+    $role = $user->roles;
+
+    return response()->json([
+        'token' => $token,
+        'user' => $user,
+        'role' => $role[0]->name ?? null,
+        'message' => 'Connexion réussie'
+    ]);
+}
+
 
     public function logout(){
         auth::logout();
@@ -65,4 +73,6 @@ class AuthController extends Controller
             ]);
        }
     }
+
+
 }
