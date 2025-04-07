@@ -224,8 +224,7 @@ class EvenementController extends Controller
             return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
         }
         return response()->json([
-            'message' => 'Désinscription réussie à l’événement',
-            'data'=>$user->id
+            'message' => 'Désinscription réussie à l’événement'
         ]);
     }
 
