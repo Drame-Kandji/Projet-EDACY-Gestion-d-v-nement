@@ -1,4 +1,17 @@
-<div class="my-8 lg:my-8 h-120 lg:w-180 lg:m-auto sm:w-50 mx-2">
-  <app-event [event]="event" [description]="false"/>
+<div class="my-8 lg:my-8 h-full lg:w-180 lg:m-auto sm:w-50 mx-2">
+  <app-event [event]="event" [description]="false" (refresh)="refresh()" (notifiction)="notification($event)"/>
+  @if (CurrentUser.role=='admin') {
+    <button (click)="generatePDF()" class=" bg-indigo-600 text-white p-2 rounded-xl mt-4  hover:bg-indigo-700 shadow-sm shadow-gray-500 active:translate-0.5">Generer la liste en PDF</button>
+  @for (part of participant; track part.id)
+  {
+  <div class="border border-gray-500 rounded-xl h-20 mt-4 flex items-center shadow-sm shadow-gray-400">
+    <div>
+     <img class=" ml-4 w-15 h-15 rounded-4xl" src="https://media.istockphoto.com/id/1300845620/fr/vectoriel/appartement-dic%C3%B4ne-dutilisateur-isol%C3%A9-sur-le-fond-blanc-symbole-utilisateur.jpg?s=612x612&w=0&k=20&c=BVOfS7mmvy2lnfBPghkN__k8OMsg7Nlykpgjn0YOHj0=" alt="" srcset="">
+    </div>
+    <div class=" ms-4">
+      <h1 class=" text-gray-700">{{part.firstName|titlecase }} {{part.lastName | titlecase }}</h1>
+      <p class=" text-gray-400">{{part.email}}</p>
+    </div>
+  </div>
+  }}
 </div>
-

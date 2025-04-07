@@ -8,6 +8,7 @@ import { LoginServiceService } from '../../services/login-service.service';
 import { EventServiceService } from '../../services/event-service.service';
 import { Succes, SuccesEvent } from '../../interfaces/succes';
 import { log } from 'console';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-events',
   imports: [EventComponent, NgIf, NgClass, NgFor, FormsModule, EditEventModalComponent],
@@ -25,14 +26,12 @@ export class EventsComponent {
 
   selectedEvent: Event | null = null;
 
-  constructor(private eventService:EventServiceService) {
+  constructor(private eventService:EventServiceService,private route :Router) {
     effect(() => {
       this.openCreateModal(this.loginService.create_event());
-      console.log('creation..........');
+      console.log('creation..........event');
     });
-
   }
-
    ngOnInit(): void {
        // données d'événements depuis une API
        this.loadEvents();
@@ -72,6 +71,7 @@ export class EventsComponent {
        openCreateModal(response:boolean): void {
          this.selectedEvent = null;
          this.isModalOpen = response;
+         //this.route.navigate(['/events']);
        }
        closeModal(): void {
         this.isModalOpen = false;
@@ -79,8 +79,10 @@ export class EventsComponent {
         this.selectedEvent = null;
       }
 
-      UpdateEvent(event:Event){
-       this.eventService.updateEvent(event).subscribe(
+      UpdateEvent(event:FormData,id:number){
+        event.append('_method', 'PATCH');
+       console.log(event);
+       this.eventService.updateEvent(event,id).subscribe(
         (data)=>{
           console.log(data);
           this.loadEvents();
@@ -100,7 +102,8 @@ export class EventsComponent {
         }
       }
 
-      saveEvent(eventData: Event): void {
+      saveEvent(eventData: FormData): void {
+        eventData.append('_method', 'POST');
         console.log(eventData);
         this.eventService.saveEvent(eventData).subscribe(
           (data)=>{

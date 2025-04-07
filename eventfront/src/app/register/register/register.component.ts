@@ -77,13 +77,13 @@ export class RegisterComponent {
                   email:this.UserLogin.user.email,
                   role:this.UserLogin.role
                 }
-                this.loginService.user.set(currentUser);
-                this.loginService.login.set(true);// Connexion réussie - rediriger vers le tableau de bord
+                //console.log(currentUser);
+                this.loginService.setUser(currentUser,3);// Connexion réussie - rediriger vers le tableau de bord
                 this.router.navigate(['/']);
               }
               else {
                 // Échec de connexion
-                this.loginError = 'Veuillez réessayer.';
+                this.loginError = 'Vous étez déja inscrit.';
               }
             }
           )

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('location');
             $table->time('heure');
-            $table->string('image')->nullable();
+            $table->string('image')->nullable()->default('https://www.evenement.com/wp-content/uploads/2019/09/samuel-pereira-uf2nnANWa8Q-unsplash-2.jpg');
             $table->string('category');
             $table->bigInteger('attendees')->default(0)->nullable();
            // $table->foreignIdFor(User::class, 'user_id')->constrained()->onDelete('cascade');

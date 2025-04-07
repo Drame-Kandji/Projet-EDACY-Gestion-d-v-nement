@@ -20,6 +20,7 @@ class AuthController extends Controller
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['message' => 'Erreur de connexion'], 401);
         }
+
     } catch (JWTException $e) {
         return response()->json(['message' => 'Impossible de créer le token'.$e->getMessage()], 500);
     }
@@ -52,7 +53,6 @@ class AuthController extends Controller
             if(!$user){
                 return response()->json([
                     'message' => 'Echec de l\'inscription',
-
                 ]);
             }
             if(!$user->hasRole( roles: 'user')){
@@ -67,9 +67,12 @@ class AuthController extends Controller
                 'role' => $user->getRoleNames()[0],
 
             ]);
-       }catch(Exception $e){
+       }
+       catch(\Throwable $e){
             return response()->json([
-                $e->getMessage()
+                'statuts'=>422,
+                'message' => 'Echec de l\'inscription',
+                'error' => $e->getMessage(),
             ]);
        }
     }

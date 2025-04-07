@@ -1,7 +1,7 @@
 // footer.component.ts
 import { NgFor, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 })
 export class FooterComponent {
   currentYear: number = new Date().getFullYear();
-
+  constructor(private route:Router){}
   // Liens de navigation du footer
   footerLinks = [
     {
@@ -30,15 +30,6 @@ export class FooterComponent {
         { name: 'Catégories', url: '/categories' },
         { name: 'Créer un événement', url: '/create-event' },
         { name: 'Événements populaires', url: '/popular' },
-      ]
-    },
-    {
-      title: 'Ressources',
-      links: [
-        { name: 'Centre d\'aide', url: '/help' },
-        { name: 'Blog', url: '/blog' },
-        { name: 'Tutoriels', url: '/tutorials' },
-        { name: 'Partenaires', url: '/partners' },
       ]
     },
     {
@@ -61,8 +52,8 @@ export class FooterComponent {
   ];
 
   // Pour l'inscription à la newsletter
-  subscribeToNewsletter(email: string) {
-    console.log('Email inscrit à la newsletter:', email);
+  subscribeToNewsletter() {
+     this.route.navigate(['/inscription'])
     // Implémentez ici votre logique d'inscription à la newsletter
   }
 }

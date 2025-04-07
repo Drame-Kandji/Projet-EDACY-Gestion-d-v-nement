@@ -56,8 +56,9 @@ export class LoginComponent implements OnInit {
         this.service.loginUser(login_password).subscribe(
           (data)=>{
             if (data.token) {
-              this.service.setUser(data.user,true)
-              this.service.login.set(true)
+              this.service.setUser(data.user,2)
+              //console.log(data.user);
+              //this.service.login.set(true)
               this.router.navigate(['/']);
             } else {
               // Échec de connexion

@@ -12,7 +12,7 @@ import { json } from 'express';
   providedIn: 'root'
 })
 export class LoginServiceService {
-  login=signal(false);
+  login=signal<any>(null);
   http=inject(HttpClient);
   api_url='http://localhost:8000/api'
   create_event=signal(false);
@@ -24,7 +24,9 @@ export class LoginServiceService {
     role:''
   })
 
-  constructor() { }
+  constructor() {
+    //localStorage.setItem('inscrit','false');
+   }
 
   loginUser(user:Login):Observable<UserConnected>{
    return this.http.post<UserConnected>(`${this.api_url}/login`,user)
@@ -39,7 +41,11 @@ export class LoginServiceService {
     return this.http.post<LoginSucces>(`${this.api_url}/register`,user)
   }
 
-  setUser(user:any=0,login:boolean){
+  setInscrire(incrit:string){
+    localStorage.setItem('inscrit',incrit)
+  }
+
+  setUser(user:any=0,login:number){
     this.user.set(user)
     this.login.set(login)
     localStorage.setItem('user',JSON.stringify(user))

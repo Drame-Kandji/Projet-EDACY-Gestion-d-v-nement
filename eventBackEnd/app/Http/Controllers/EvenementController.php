@@ -9,7 +9,10 @@ use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Mail;
+
+use function PHPUnit\Framework\returnSelf;
 
 class EvenementController extends Controller
 {
@@ -41,7 +44,12 @@ class EvenementController extends Controller
     {
         try {
             // dd($request->validated());
-            $evenement = Evenement::create($request->validated());
+            $data=$request->validated();
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('evenements', 'public');
+                $data['image'] = $imagePath; // on ajoute le chemin à sauvegarder en BDD
+            }
+            $evenement = Evenement::create($data);
             return response()->json([
                 'status' => 200,
                 'message' => 'Evenement créé avec succés',
@@ -89,9 +97,14 @@ class EvenementController extends Controller
     {
         //dd($request->all());
         try {
+            $data=$request->validated();
             $evenement = Evenement::findOrFail($id);
             if ($evenement) {
-                $evenement->update($request->all());
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('evenements', 'public');
+                $data['image'] = $imagePath; // on ajoute le chemin à sauvegarder en BDD
+            }
+                $evenement->update($data);
                 return response()->json([
                     'status' => 200,
                     'message' => 'Evenement mis à jour avec succés',
@@ -137,58 +150,8 @@ class EvenementController extends Controller
         }
     }
 
-    public function search(Request $request)
-    {
-        $query = $request->query();
 
-        if (!$query) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Veuillez fournir un terme de recherche.'
-            ], 400);
-        }
-        $queryValue = array_keys($query)[0];
 
-        // Rechercher par titre, type ou lieu
-        $evenements = Evenement::where('title', 'LIKE', "%$queryValue%")
-            ->orWhere('category', 'LIKE', "%$queryValue%")
-            ->orWhere('location', 'LIKE', "%$queryValue%")
-            ->get();
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Résultats de la recherche',
-            'data' => $evenements
-        ]);
-    }
-
-    public function filter(Request $request)
-    {
-        $category = $request->input();
-
-    if (empty($category)) {
-        return response()->json([
-            'status' => 400,
-            'message' => 'Veuillez spécifier une catégorie.'
-        ], 400);
-    }
-
-    // Extraire la première clé de l'URL
-    $categoryName = array_keys($category)[0];
-
-    if (strtolower($categoryName) === 'tous') {
-        $evenements = Evenement::all();
-    } else {
-        // on filtre par catégorie
-        $evenements = Evenement::where('category', 'LIKE', "%$categoryName%")->get();
-    }
-
-    return response()->json([
-        'status' => 200,
-        'message' => 'Événements filtrés',
-        'data' => $evenements
-    ]);
-    }
 
 
 
@@ -198,6 +161,18 @@ class EvenementController extends Controller
         $user = Auth::user();
         return response()->json([
             'evenements' => $user->evenements
+        ]);
+    }
+
+    public function participants($id)
+    {
+        $evenement = Evenement::with('users')->find($id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+        return response()->json([
+            'message' => 'Liste des participants',
+            'participants' =>$evenement->users// ou juste 'data'
         ]);
     }
 
@@ -219,29 +194,9 @@ class EvenementController extends Controller
             return response()->json(['message' => 'Événement non trouvé'], 404);
         }
 
-        // if (!$user->evenements->contains($evenement->id)) {
-        //     $user->evenements()->attach($evenement->id);
-        //     // Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
-        //     Mail::raw('Test Laravel mail vers Gmail', function ($message) {
-        //         $message->to('dramealiou13460@gmail.com')
-        //                 ->subject('Ceci est un test');
-        //     });
-        // } else {
-        //     return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
-        // }
-
-        // return response()->json(['message' => 'Inscription réussie à l’événement']);
-
         if (!$user->evenements->contains($evenement->id)) {
             $user->evenements()->attach($evenement->id);
 
-            // Envoi de l'email en mode 'log' pour tester
-            // Mail::raw('Test Laravel mail vers Gmail', function ($message) use ($user) {
-            //     $message->to('aliou.drame@univ-thies.sn')
-            //             ->subject('Ceci est un test');
-            // });
-
-            // Optionnel : Si tu veux tester plus proprement, tu peux utiliser un mail personnalisé avec un Mailable
              Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
 
             return response()->json(['message' => 'Inscription réussie et email envoyé']);
@@ -251,29 +206,27 @@ class EvenementController extends Controller
 
     }
 
-    public function desinscrire($id)
-    {
-        $user = Auth::user();
+    // Désinscription d'un utilisateur à un événement
+
+    public function desinscrire(Request $request){
+        $user = User::where('email',$request->email)->first();
         if (!$user) {
             return response()->json(['message' => 'Utilisateur non authentifié'], 401);
         }
 
-        if (!is_numeric($id)) {
-            return response()->json(['message' => 'ID invalide'], 400);
-        }
-
-        $evenement = Evenement::find($id);
+        $evenement = Evenement::find($request->id);
         if (!$evenement) {
             return response()->json(['message' => 'Événement non trouvé'], 404);
         }
-
         if ($user->evenements->contains($evenement->id)) {
             $user->evenements()->detach($evenement->id);
-            return response()->json(['message' => 'Désinscription réussie de l\'événement']);
         } else {
-            return response()->json(['message' => 'Utilisateur non inscrit à cet événement'], 400);
+            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
         }
+        return response()->json([
+            'message' => 'Désinscription réussie à l’événement',
+            'data'=>$user->id
+        ]);
     }
-
 
 }

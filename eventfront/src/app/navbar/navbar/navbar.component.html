@@ -4,7 +4,7 @@
     <div class="flex justify-between h-16">
       <div class="flex">
         <!-- Logo -->
-        <a routerLink="/" class="flex-shrink-0 flex items-center">
+        <a routerLink="/"  class="flex-shrink-0 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -13,30 +13,33 @@
 
         <!-- Navigation principale - Desktop -->
         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-          <a routerLink="/" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+          <a routerLink="/"  routerLinkActive="border-indigo-500 border-b-5 text-gray-900" [routerLinkActiveOptions]="{exact:true}" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1  text-sm font-medium">
             Accueil
           </a>
-          <a routerLink="/events" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+          <a routerLink="/events"  routerLinkActive="border-indigo-500 border-b-5 text-gray-900" class="text-gray-500  hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1  text-sm font-medium">
             Événements
           </a>
-          <a routerLink="/calendrier" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+          <a routerLink="/calendrier" routerLinkActive="border-indigo-500 border-b-5 text-gray-900" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1  text-sm font-medium">
             Calendrier
           </a>
-          <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-            Contacts
+          @if (currentUser.role=='admin') {
+          <a routerLink="/participants" routerLinkActive="border-indigo-500 border-b-5 text-gray-900" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1  text-sm font-medium">
+            Participants
           </a>
+          }
         </div>
       </div>
 
       <!-- Actions de navigation à droite -->
       <div class="hidden sm:ml-6 sm:flex sm:items-center">
         <!-- Bouton de notification -->
+         @if (isLoggedIn) {
         <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="sr-only">Voir les notifications</span>
           <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
-        </button>
+        </button>}
 
         <!-- Bouton de création d'événement -->
          @if (currentUser.role=='admin') {
@@ -54,9 +57,8 @@
             </button>
 
             <!-- Menu déroulant -->
-            <div *ngIf="isMenuOpen" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
+            <div *ngIf="isMenuOpen" class="origin-top-left absolute left-10 mt-1 w-35 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              <a routerLink="/events" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
               <a routerLink="/connexion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" (click)="logout()">Déconnexion</a>
             </div>
           </div>
@@ -93,19 +95,19 @@
   </div>
 
   <!-- Menu mobile -->
-  <div *ngIf="isMenuOpen" class="sm:hidden" id="mobile-menu">
+  <div *ngIf="isMenuOpen" class="z-10 sm:hidden" id="mobile-menu">
     <div class="pt-2 pb-3 space-y-1">
-      <a routerLink="/" (click)="toggleMenu()" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+      <a routerLink="/" routerLinkActive="border-indigo-500 text-indigo-700 bg-indigo-50 border-l-4" [routerLinkActiveOptions]="{exact:true}" (click)="toggleMenu()" class=" block hover:border-gray-300 hover:text-gray-700  pl-3 pr-4 py-2 text-base font-medium">
         Accueil
       </a>
-      <a routerLink="/events" (click)="toggleMenu()" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+      <a routerLink="/events" routerLinkActive="border-indigo-500 text-indigo-700 bg-indigo-50 border-l-4" (click)="toggleMenu()" class=" block hover:border-gray-300 hover:text-gray-700  pl-3 pr-4 py-2 text-base font-medium">
         Événements
       </a>
-      <a routerLink="/calendrier" (click)="toggleMenu()" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+      <a routerLink="/calendrier" routerLinkActive="border-indigo-500 text-indigo-700 bg-indigo-50 border-l-4" (click)="toggleMenu()" class=" block hover:border-gray-300 hover:text-gray-700  pl-3 pr-4 py-2 text-base font-medium">
         Calendrier
       </a>
-      <a href="#" (click)="toggleMenu()" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-        Contacts
+      <a href="#" (click)="toggleMenu()" routerLinkActive="border-indigo-500 text-indigo-700 bg-indigo-50 border-l-4" class=" block hover:border-gray-300 hover:text-gray-700  pl-3 pr-4 py-2 text-base font-medium">
+       Participants
       </a>
     </div>
 
@@ -127,20 +129,17 @@
         </button>
       </div>
       <div class="mt-3 space-y-1 z-1">
-        <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+        <a routerLink="/" (click)="toggleMenu()" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
           Votre profil
         </a>
-        <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-          Paramètres
-        </a>
-        <a  (click)="logout()" routerLink="/connexion"  class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100" (click)="logout()">
+        <a  (click)="logout()" (click)="toggleMenu()" routerLink="/connexion"  class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100" (click)="logout()">
           Déconnexion
         </a>
       </div>
     </div>
 
     <!-- Boutons connexion/inscription mobile -->
-    <div *ngIf="!isLoggedIn" class="pt-4 pb-3 border-t border-gray-200">
+    <div *ngIf="!isLoggedIn" class="pt-4 pb-3 border-t border-gray-200 z-10">
       <div class="space-y-1 px-4">
         <a [routerLink]="['/connexion']" routerLinkActive="router-link-active" (click)="toggleMenu()" class="block text-center py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
           Connexion
