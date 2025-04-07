@@ -50,6 +50,10 @@ export class EventServiceService {
     return this.http.post<SuccesEvent>(`${this.api_url}/inscrire`,infos)
   }
 
+  desinscrire(infos:Inscrire){
+    return this.http.post<SuccesEvent>(`${this.api_url}/desinscrire`,infos)
+  }
+
   participants(idevent:string|null):Observable<Participant>{
    return this.http.get<Participant>(`${this.api_url}/${idevent}/participants`)
   }
