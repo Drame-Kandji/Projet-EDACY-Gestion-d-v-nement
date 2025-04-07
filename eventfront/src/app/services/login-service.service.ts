@@ -41,7 +41,9 @@ export class LoginServiceService {
     return this.http.post<LoginSucces>(`${this.api_url}/register`,user)
   }
 
-
+  setInscrire(incrit:string){
+    localStorage.setItem('inscrit',incrit)
+  }
 
   setUser(user:any=0,login:number){
     this.user.set(user)

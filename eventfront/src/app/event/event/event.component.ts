@@ -45,6 +45,10 @@ export class EventComponent {
         const user:any=localStorage.getItem('user')
         console.log(JSON.parse(user));
         this.currentUser=JSON.parse(user)
+        let inscrit:any=localStorage.getItem('inscrit')
+        inscrit=JSON.parse(inscrit)
+        this.signup=inscrit
+
     });
 
   }
@@ -72,7 +76,7 @@ export class EventComponent {
   }
 
   inscrire(event:Event) {
-    this.signup=!this.signup
+    this.signup=true
     const logion:any=localStorage.getItem('login');
     let user:any=localStorage.getItem('user');
     //si l'utilisateur n'est pas authentifier
@@ -95,9 +99,15 @@ export class EventComponent {
           console.log(response);
         }
       )
+      this.service.setInscrire('true');
       this.refresh.emit()
       console.log('inscription................',inofs);
     }
+  }
+  
+  desinscrire(event:Event){
+    this.signup=false
+    this.service.setInscrire('false')
   }
 
   getImageUrl(path: string): string {

@@ -43,28 +43,31 @@
       @if (description) {
         @if(currentUser.role=='admin'){
         <span class="text-sm text-gray-500">{{ event.attendees }} participants</span>
-      <button (click)="openEditModal(event)" class="w-16 sm:w-18 inline-flex items-center px-1 sm:px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-yellow-500 hover:bg-yellow-600">
+      <button (click)="openEditModal(event)" class="w-16 sm:w-18 inline-flex items-center px-1 sm:px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm shadow-gray-500 text-white bg-yellow-500 hover:bg-yellow-600 active:translate-0.5">
         Modifier
       </button>
-      <button (click)="deleteEvent(event.id)" class="w-20 sm:w-18 inline-flex items-center px-1 sm:px-1 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-red-500 hover:bg-red-600">
+      <button (click)="deleteEvent(event.id)" class="w-20 sm:w-18 inline-flex items-center px-1 sm:px-1 py-1 border border-transparent text-sm font-medium rounded shadow-sm shadow-gray-500 text-white bg-red-500 hover:bg-red-600 active:translate-0.5">
         Supprimer
       </button>
     }
       <a  [routerLink]="['/event', event.id]"
-         routerLinkActive="router-link-active" class="w-22 sm:w-22 inline-flex items-center px-1 sm:px-1 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+         routerLinkActive="router-link-active" class="w-22 sm:w-22 inline-flex items-center px-1 sm:px-1 py-1 border border-transparent text-sm font-medium rounded shadow-sm shadow-gray-500 text-white bg-indigo-600 hover:bg-indigo-700 active:translate-0.5">
         Savoir plus
       </a>
       }
       @else {
-        <button (click)="inscrire(event)"
-          class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+
           @if(signup) {
-            Désinscrire
+            <button (click)="desinscrire(event)"
+            class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm shadow-gray-500 text-white bg-yellow-500 hover:bg-yellow-600 active:translate-0.5">
+            Désinscrire </button>
           }
           @else {
-          S'inscrire
+            <button (click)="inscrire(event)"
+            class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded shadow-sm shadow-gray-500 text-white bg-indigo-600 hover:bg-indigo-700 active:translate-0.5">
+            S'inscrire </button>
           }
-      </button>
+
       }
 
     </div>
