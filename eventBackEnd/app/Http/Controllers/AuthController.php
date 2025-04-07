@@ -48,11 +48,10 @@ class AuthController extends Controller
             if(!$user){
                 return response()->json([
                     'message' => 'Echec de l\'inscription',
-
                 ]);
             }
             if(!$user->hasRole( roles: 'user')){
-                $user->assignRole(roles: 'admin');
+                $user->assignRole(roles: 'user');
             }
             return response()->json([
                 'status'=>200,

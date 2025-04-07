@@ -12,8 +12,6 @@ use App\Http\Controllers\UserController;
 
 
 Route::apiResource('evenements', EvenementController::class);
-Route::get('/search', [EvenementController::class, 'search']);
-Route::get('/filter', [EvenementController::class, 'filter']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,7 +20,7 @@ Route::post('/role/{id}', [UserController::class, 'assignRole']);
 Route::get('/monrole', [UserController::class, 'checkRole']);
 
 Route::post('/evenements/inscrire', [EvenementController::class, 'inscrire']);
-Route::post('/evenements/{id}/desinscrire', [EvenementController::class, 'desinscrire']);
+Route::post('/evenements/desinscrire', [EvenementController::class, 'desinscrire']);
 Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
 Route::get('/evenements/{id}/participants',[EvenementController::class,'participants']);
 

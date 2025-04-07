@@ -147,58 +147,8 @@ class EvenementController extends Controller
         }
     }
 
-    public function search(Request $request)
-    {
-        $query = $request->query();
 
-        if (!$query) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Veuillez fournir un terme de recherche.'
-            ], 400);
-        }
-        $queryValue = array_keys($query)[0];
 
-        // Rechercher par titre, type ou lieu
-        $evenements = Evenement::where('title', 'LIKE', "%$queryValue%")
-            ->orWhere('category', 'LIKE', "%$queryValue%")
-            ->orWhere('location', 'LIKE', "%$queryValue%")
-            ->get();
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Résultats de la recherche',
-            'data' => $evenements
-        ]);
-    }
-
-    public function filter(Request $request)
-    {
-        $category = $request->input();
-
-    if (empty($category)) {
-        return response()->json([
-            'status' => 400,
-            'message' => 'Veuillez spécifier une catégorie.'
-        ], 400);
-    }
-
-    // Extraire la première clé de l'URL
-    $categoryName = array_keys($category)[0];
-
-    if (strtolower($categoryName) === 'tous') {
-        $evenements = Evenement::all();
-    } else {
-        // on filtre par catégorie
-        $evenements = Evenement::where('category', 'LIKE', "%$categoryName%")->get();
-    }
-
-    return response()->json([
-        'status' => 200,
-        'message' => 'Événements filtrés',
-        'data' => $evenements
-    ]);
-    }
 
 
 
@@ -242,7 +192,32 @@ class EvenementController extends Controller
             return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
         }
 
-        return response()->json(['message' => 'Inscription réussie à l’événement']);
+        return response()->json([
+            'message' => 'Inscription réussie à l’événement',
+            'data'=>$user->id
+        ]);
+    }
+
+    public function desinscrire(Request $request){
+        $user = User::where('email',$request->email)->first();
+        //return Evenement::find($request->id) ;
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        }
+
+        $evenement = Evenement::find($request->id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+        if ($user->evenements->contains($evenement->id)) {
+            $user->evenements()->detach($evenement->id);
+        } else {
+            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+        }
+        return response()->json([
+            'message' => 'Désinscription réussie à l’événement',
+            'data'=>$user->id
+        ]);
     }
 
 }
