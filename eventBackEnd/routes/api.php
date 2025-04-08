@@ -19,7 +19,7 @@ Route::get('/participants/{id}', [EvenementController::class, 'participants']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/mes-evenements', [EvenementController::class, 'mesEvenements']);
-    Route::post('/events/{id}/register', [EvenementController::class, 'inscrire']);
-    Route::post('/events/{id}/logout', [EvenementController::class, 'desinscrire']);
+    Route::post('/evenements/inscrire', [EvenementController::class, 'inscrire']);
+    Route::post('/evenements/desinscrire', [EvenementController::class, 'desinscrire']);
 
 });
