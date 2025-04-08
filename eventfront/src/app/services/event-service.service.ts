@@ -12,7 +12,7 @@ import { Participant } from '../interfaces/participant';
 })
 export class EventServiceService {
   http=inject(HttpClient)
-  api_url='http://localhost:8000/api/evenements'
+  api_url='http://localhost:8000/api/events'
   constructor() { }
 
   getEvents():Observable<Succes>
@@ -46,12 +46,18 @@ export class EventServiceService {
     return this.http.post<SuccesEvent>(`${this.api_url}/${id}`,event)
   }
 
-  inscrire(infos:Inscrire){
-    return this.http.post<SuccesEvent>(`${this.api_url}/inscrire`,infos)
+  inscrire(id:number,token:string){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<SuccesEvent>(`${this.api_url}/${id}/register`,id,{headers})
   }
 
-  desinscrire(infos:Inscrire){
-    return this.http.post<SuccesEvent>(`${this.api_url}/desinscrire`,infos)
+  desinscrire(id:number,token:string){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<SuccesEvent>(`${this.api_url}/${id}/logout`,id,{headers})
   }
 
   participants(idevent:string|null):Observable<Participant>{

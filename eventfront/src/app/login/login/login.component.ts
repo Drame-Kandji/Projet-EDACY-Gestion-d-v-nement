@@ -1,6 +1,6 @@
 // login.component.ts
 import { NgClass, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginServiceService } from '../../services/login-service.service';
@@ -33,6 +33,11 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
+
+    effect(()=>{
+     this.service.loginMessage();
+     this.loginError=this.service.loginMessage();
+    })
   }
 
   ngOnInit(): void {
@@ -46,8 +51,6 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      this.loginError = '';
-
       // Simuler une requête d'authentification
       setTimeout(() => {
         const email = this.loginForm.get('email')?.value;
@@ -57,12 +60,10 @@ export class LoginComponent implements OnInit {
           (data)=>{
             if (data.token) {
               this.service.setUser(data.user,2)
-              //console.log(data.user);
+               //console.log(data.token);
               //this.service.login.set(true)
               this.router.navigate(['/']);
-            } else {
-              // Échec de connexion
-              this.loginError = 'Identifiants incorrects. Veuillez réessayer.';
+              this.service.loginMessage.set('');
             }
           }
         )

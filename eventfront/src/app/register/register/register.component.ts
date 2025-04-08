@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { log } from 'node:console';
@@ -39,6 +39,12 @@ export class RegisterComponent {
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmed_password:['',Validators.required]
       });
+
+      effect(()=>{
+        this.loginService.registerMessage();
+        this.loginError=this.loginService.registerMessage()
+        //console.log(this.loginError);
+      })
     }
 
     ngOnInit(): void {
@@ -52,8 +58,7 @@ export class RegisterComponent {
     onSubmit(): void {
       if (this.loginForm.valid && (this.loginForm.get('password')?.value===this.loginForm.get('confirmed_password')?.value)) {
         this.isLoading = true;
-        this.loginError = '';
-        console.log(this.loginForm.value)
+        //console.log(this.loginForm.value)
         // Simuler une requête d'authentification
         setTimeout(() => {
           const firstname=this.loginForm.get('firstname')?.value;
@@ -69,25 +74,22 @@ export class RegisterComponent {
           this.loginService.register(user).subscribe(
             (response)=>{
               this.UserLogin=response
-              console.log(this.UserLogin);
+              //console.log(this.UserLogin);
               if (this.UserLogin.status==200) {
                 let currentUser:CurrentUser={
                   firstName:this.UserLogin.user.firstName,
                   lastName:this.UserLogin.user.lastName,
                   email:this.UserLogin.user.email,
-                  role:this.UserLogin.role
+                  role:this.UserLogin.role,
+                  token:this.UserLogin.token
                 }
                 //console.log(currentUser);
                 this.loginService.setUser(currentUser,3);// Connexion réussie - rediriger vers le tableau de bord
                 this.router.navigate(['/']);
-              }
-              else {
-                // Échec de connexion
-                this.loginError = 'Vous étez déja inscrit.';
+                this.loginService.registerMessage.set('');
               }
             }
           )
-
           this.isLoading = false;
         }, 1500);
       } else {
