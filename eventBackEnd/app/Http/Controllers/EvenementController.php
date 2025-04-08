@@ -177,34 +177,33 @@ class EvenementController extends Controller
     }
 
 
-    public function inscrire($id)
-    {
-        $user = Auth::user();
-        $roles = $user->roles;
-        if (!$user) {
-            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        public function inscrire(Request $request)
+        {
+            //return $request->all();
+            $user = User::where('email',$request->email)->first();
+            //return Evenement::find($request->id) ;
+            if (!$user) {
+                return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+            }
+            $evenement = Evenement::find($request->id);
+            if (!$evenement) {
+                return response()->json(['message' => 'Événement non trouvé'], 404);
+            }
+            if (!$user->evenements->contains($evenement->id)) {
+                $user->evenements()->attach($evenement->id);
+
+                Mail::to($request->email)->send(new ConfirmationInscription($evenement, $user));
+
+                return response()->json([
+                    'message' => 'Inscription réussie à l’événement',
+                    'data'=>$user->id
+                    ]);
+            } else {
+                return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+            }
+
         }
-        if (!is_numeric($id)) {
-            return response()->json(['message' => 'ID invalide'], 400);
-        }
 
-
-        $evenement = Evenement::find($id);
-        if (!$evenement) {
-            return response()->json(['message' => 'Événement non trouvé'], 404);
-        }
-
-        if (!$user->evenements->contains($evenement->id)) {
-            $user->evenements()->attach($evenement->id);
-
-             Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
-
-            return response()->json(['message' => 'Inscription réussie et email envoyé']);
-        } else {
-            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
-        }
-
-    }
 
     // Désinscription d'un utilisateur à un événement
 
