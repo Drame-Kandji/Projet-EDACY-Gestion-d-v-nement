@@ -203,8 +203,6 @@ class EvenementController extends Controller
             }
 
         }
-
-
     // Désinscription d'un utilisateur à un événement
 
     public function desinscrire(Request $request){
