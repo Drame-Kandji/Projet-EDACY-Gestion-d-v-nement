@@ -83,7 +83,7 @@ export class RegisterComponent {
                   role:this.UserLogin.role,
                   token:this.UserLogin.token
                 }
-                //console.log(currentUser);
+                console.log(currentUser);
                 this.loginService.setUser(currentUser,3);// Connexion réussie - rediriger vers le tableau de bord
                 this.router.navigate(['/']);
                 this.loginService.registerMessage.set('');
