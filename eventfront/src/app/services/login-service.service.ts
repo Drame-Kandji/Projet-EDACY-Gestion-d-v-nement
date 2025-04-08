@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { inject, Injectable, signal } from '@angular/core';
 import { Login } from '../interfaces/login';
 import { User } from '../interfaces/user';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { LoginSucces } from '../interfaces/login-succes';
 import { CurrentUser } from '../interfaces/current-user';
 import { UserConnected } from '../interfaces/user-connected';
@@ -40,7 +40,7 @@ export class LoginServiceService {
       } else {
         this.loginMessage.set('Une erreur est survenue.');
       }
-      return throwError(() => null); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+      return throwError(() => of(null)); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
     })
   )
    //this.login.set(true);
@@ -63,7 +63,7 @@ export class LoginServiceService {
         } else {
           this.registerMessage.set('Une erreur est survenue.');
         }
-        return throwError(() => this.registerMessage()); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+        return throwError(() => of(null)); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
       })
     )
   }
