@@ -6,8 +6,7 @@ import { catchError, Observable, of, throwError } from 'rxjs';
 import { LoginSucces } from '../interfaces/login-succes';
 import { CurrentUser } from '../interfaces/current-user';
 import { UserConnected } from '../interfaces/user-connected';
-import { json } from 'express';
-import { sign } from 'crypto';
+
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +39,7 @@ export class LoginServiceService {
       } else {
         this.loginMessage.set('Une erreur est survenue.');
       }
-      return throwError(() => of(null)); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+      return throwError(() => of(null)); //`of(null)` éviter le crash
     })
   )
    //this.login.set(true);
@@ -63,7 +62,7 @@ export class LoginServiceService {
         } else {
           this.registerMessage.set('Une erreur est survenue.');
         }
-        return throwError(() => of(null)); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+        return throwError(() => of(null));
       })
     )
   }
