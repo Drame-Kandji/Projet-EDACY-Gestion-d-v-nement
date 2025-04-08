@@ -15,25 +15,27 @@ class AuthController extends Controller
     public function login()
 {
     $credentials = request(['email', 'password']);
-
     try {
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['message' => 'Erreur de connexion'], 401);
-        }
+        if ($token = JWTAuth::attempt($credentials)) {
+            $user = Auth::user();
+            $role = $user->roles;
+            return response()->json([
+                'token' => $token,
+                'user' => ['firstName'=>$user->firstName,
+                'lastName'=>$user->lastName,
+                'email'=>$user->email,
+                'role' => $role[0]->name ?? null,
+                'token' => $token],
+                'message' => 'Connexion réussie' ]);
+            }
+        else
+        return response()->json(['message' => 'Erreur de connexion'], 401);
 
     } catch (JWTException $e) {
         return response()->json(['message' => 'Impossible de créer le token'.$e->getMessage()], 500);
     }
 
-    $user = Auth::user();
-    $role = $user->roles;
 
-    return response()->json([
-        'token' => $token,
-        'user' => $user,
-        'role' => $role[0]->name ?? null,
-        'message' => 'Connexion réussie'
-    ]);
 }
 
 
@@ -49,6 +51,7 @@ class AuthController extends Controller
        // return $request->validated();
        try{
             $user = User::create($request->validated());
+            $token = JWTAuth::fromUser($user);
             //return $user;
             if(!$user){
                 return response()->json([
@@ -65,6 +68,7 @@ class AuthController extends Controller
                 'lastName'=>$user->lastName,
                 'email'=>$user->email],
                 'role' => $user->getRoleNames()[0],
+                'token'=>$token
 
             ]);
        }
