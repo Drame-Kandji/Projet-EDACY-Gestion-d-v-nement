@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 })
 export class EventsComponent {
   allEvents: Event[]=[];
-  categories: string[] = ['Tous', 'Conférence', 'Concert', 'Atelier', 'Exposition', 'Sport'];
+  categories: string[] = ['Tous', 'conférence', 'concert', 'atelier', 'exposition', 'sport'];
   selectedCategory: string = 'Tous';
   searchTerm: string = '';
   loginService=inject(LoginServiceService);

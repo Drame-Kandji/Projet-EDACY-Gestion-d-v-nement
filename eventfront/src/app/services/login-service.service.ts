@@ -75,7 +75,8 @@ export class LoginServiceService {
   setUser(user:any=0,login:number){
     this.user.set(user)
     this.login.set(login)
-    localStorage.setItem('user',JSON.stringify(user))
-    localStorage.setItem('login',JSON.stringify(login))
+    localStorage.setItem('user',JSON.stringify(user));
+    localStorage.setItem('login',JSON.stringify(login));
+    localStorage.setItem('inscrit','false');
   }
 }
