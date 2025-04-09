@@ -4,6 +4,7 @@ import { Component, computed, effect, Inject, inject, Input, OnInit, PLATFORM_ID
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LoginServiceService } from '../../services/login-service.service';
 import { FormsModule } from '@angular/forms';
+import { log } from 'util';
 
 @Component({
   selector: 'app-navbar',
@@ -18,7 +19,7 @@ export class NavbarComponent implements OnInit {
   isMenuOpen: boolean = false;
 
   avatar:string= 'https://media.istockphoto.com/id/1300845620/fr/vectoriel/appartement-dic%C3%B4ne-dutilisateur-isol%C3%A9-sur-le-fond-blanc-symbole-utilisateur.jpg?s=612x612&w=0&k=20&c=BVOfS7mmvy2lnfBPghkN__k8OMsg7Nlykpgjn0YOHj0='
-  
+
   currentUser:any={
     firstName: '',
     lastName: '',
@@ -65,6 +66,9 @@ export class NavbarComponent implements OnInit {
   logout(): void {
     //Implémentez la logique de déconnexion ici
      this.service.setUser(0,0);
+     this.service.logout(this.currentUser.token).subscribe()
+     //console.log(this.currentUser.token);
+
     //this.route.navigate(['/connexion']);
     console.log('Utilisateur déconnecté');
   }

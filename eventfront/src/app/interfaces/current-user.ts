@@ -4,4 +4,5 @@ export interface CurrentUser {
     email:string;
     //avatar:'';
     role:string;
+    token:string;
 }

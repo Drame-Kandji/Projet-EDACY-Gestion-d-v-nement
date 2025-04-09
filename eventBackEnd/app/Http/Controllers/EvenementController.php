@@ -205,24 +205,29 @@ class EvenementController extends Controller
         }
     // Désinscription d'un utilisateur à un événement
 
-    public function desinscrire(Request $request){
-        $user = User::where('email',$request->email)->first();
+    public function desinscrire($id){
+        $user = Auth::user();
+        $roles = $user->roles;
         if (!$user) {
             return response()->json(['message' => 'Utilisateur non authentifié'], 401);
         }
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'ID invalide'], 400);
+        }
 
-        $evenement = Evenement::find($request->id);
+        $evenement = Evenement::find($id);
         if (!$evenement) {
             return response()->json(['message' => 'Événement non trouvé'], 404);
         }
         if ($user->evenements->contains($evenement->id)) {
+            //ceci n'est pas une erreur, je répéte cci n'est pas une erreur
             $user->evenements()->detach($evenement->id);
+             //Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
+            return response()->json(['message' => 'Desinscription réussie et email envoyé']);
         } else {
             return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
         }
-        return response()->json([
-            'message' => 'Désinscription réussie à l’événement'
-        ]);
-    }
 
+
+    }
 }

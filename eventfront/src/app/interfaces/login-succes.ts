@@ -7,4 +7,5 @@ export interface LoginSucces {
     email:string;
   },
   role:string;
+  token:string;
 }

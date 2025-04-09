@@ -1,13 +1,11 @@
-import { Component, computed, effect, inject, Input, Output,EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, effect, inject, Input, Output,EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 import { Event } from '../../interfaces/event';
 import { Route, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { EditEventModalComponent } from "../../edit-event/edit-event-modal/edit-event-modal.component";
 import { DatePipe, isPlatformBrowser, NgClass } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
 import { LoginServiceService } from '../../services/login-service.service';
-import { log } from 'node:console';
 import { Inscrire } from '../../interfaces/inscrire';
-import { response } from 'express';
 
 
 
@@ -83,7 +81,8 @@ export class EventComponent {
     user=JSON.parse(user)
       const User_infos:Inscrire={
         id:event.id,
-        email:user.email
+        email:user.email,
+        token:user.token
       }
       return User_infos
 
@@ -107,7 +106,7 @@ export class EventComponent {
     }
     else
     {
-      this.eventService.inscrire(infos).subscribe(
+      this.eventService.inscrire(infos.id,infos.token).subscribe(
         (response)=>{
           console.log(response);
         }
@@ -123,7 +122,7 @@ export class EventComponent {
     this.signup=false
     const infos=this.getUser(event);
     this.service.setInscrire('false')
-    this.eventService.desinscrire(infos).subscribe(
+    this.eventService.desinscrire(infos.id,infos.token).subscribe(
       response=>{
         console.log(response);
       }
@@ -131,7 +130,6 @@ export class EventComponent {
     this.refresh.emit();
     this.notifiction.emit(this.signup);
   }
-
   getImageUrl(path: string): string {
     //console.log(path)
     return `http://localhost:8000/storage/${path}`;
