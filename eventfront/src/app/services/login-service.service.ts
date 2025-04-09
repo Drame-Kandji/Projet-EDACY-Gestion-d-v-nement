@@ -42,7 +42,6 @@ export class LoginServiceService {
       return throwError(() => of(null)); //`of(null)` éviter le crash
     })
   )
-   //this.login.set(true);
   }
 
   logout(token:string)
