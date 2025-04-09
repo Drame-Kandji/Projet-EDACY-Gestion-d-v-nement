@@ -6,6 +6,7 @@ import { DatePipe, isPlatformBrowser, NgClass } from '@angular/common';
 import { EventServiceService } from '../../services/event-service.service';
 import { LoginServiceService } from '../../services/login-service.service';
 import { Inscrire } from '../../interfaces/inscrire';
+import { log } from 'console';
 
 
 
@@ -99,6 +100,7 @@ export class EventComponent {
     this.signup=true
     const Islogin:any=this.getIsLogion()
     const infos=this.getUser(event)
+    console.log(infos.token)
     //si l'utilisateur n'est pas authentifier
     if(!parseInt(Islogin)){
       console.log(Islogin);
