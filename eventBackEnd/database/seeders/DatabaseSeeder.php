@@ -15,42 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         //User::factory(1)->create();
-        $this->call(RoleSeeder::class);
-        User::factory()->create([
-            "firstName"=> "ndongo",
-            "lastName"=> "mbathie",
-            "email"=>"ndongo.mbath@univ-thies.sn",
-            "password"=>"ndongo042002"
-        ])->assignRole('admin');
-        User::factory()->create([
-            "firstName"=> "Aliou",
-            "lastName"=> "Dramé",
-            "email"=>"aliou.drame@univ-thies.sn",
-            "password"=>"ndongo042002"
-        ])->assignRole('admin');
-        User::factory()->create([
-            "firstName"=> "aliou",
-            "lastName"=> "dramé",
-            "email"=>"aliou.mbath@univ-thies.sn",
-            "password"=>"ndongo042002"
-        ])->assignRole('user');
-        User::factory()->create([
-            "firstName"=> "talla",
-            "lastName"=> "diop",
-            "email"=>"talla.diop1@univ-thies.sn",
-            "password"=>"ndongo042002"
-        ])->assignRole('user');
-        User::factory()->create([
-            "firstName"=> "ndongo",
-            "lastName"=> "mbathie",
-            "email"=>"ndongo1.mbath@univ-thies.sn",
-            "password"=>"ndongo042002"
-        ])->assignRole('user');
-        User::factory()->create([
-            "firstName"=> "Talla",
-            "lastName"=> "Diop",
-            "email"=>"tallaadiop750@gmail.com",
-            "password"=>"ndongo042002"
-        ])->assignRole('user');
-    }
+        $this->call([RoleSeeder::class,eventSeeder::class]);
+        /*
+      */
+}
 }

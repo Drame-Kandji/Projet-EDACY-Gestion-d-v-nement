@@ -2,12 +2,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { inject, Injectable, signal } from '@angular/core';
 import { Login } from '../interfaces/login';
 import { User } from '../interfaces/user';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { LoginSucces } from '../interfaces/login-succes';
 import { CurrentUser } from '../interfaces/current-user';
 import { UserConnected } from '../interfaces/user-connected';
-import { json } from 'express';
-import { sign } from 'crypto';
+
 
 @Injectable({
   providedIn: 'root'
@@ -40,10 +39,9 @@ export class LoginServiceService {
       } else {
         this.loginMessage.set('Une erreur est survenue.');
       }
-      return throwError(() => null); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+      return throwError(() => of(null)); //`of(null)` éviter le crash
     })
   )
-   //this.login.set(true);
   }
 
   logout(token:string)
@@ -63,7 +61,7 @@ export class LoginServiceService {
         } else {
           this.registerMessage.set('Une erreur est survenue.');
         }
-        return throwError(() => this.registerMessage()); // Ou tu peux retourner `of(null)` si tu veux éviter le crash
+        return throwError(() => of(null));
       })
     )
   }
@@ -75,7 +73,8 @@ export class LoginServiceService {
   setUser(user:any=0,login:number){
     this.user.set(user)
     this.login.set(login)
-    localStorage.setItem('user',JSON.stringify(user))
-    localStorage.setItem('login',JSON.stringify(login))
+    localStorage.setItem('user',JSON.stringify(user));
+    localStorage.setItem('login',JSON.stringify(login));
+    localStorage.setItem('inscrit','false');
   }
 }
