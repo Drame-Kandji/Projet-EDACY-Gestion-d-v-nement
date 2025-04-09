@@ -1,59 +1,131 @@
-# Eventfront
+# Event Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.5.
+Application web de gestion des événements. Elle permet aux utilisateurs de s'inscrire, de créer et de gérer des événements à travers une interface moderne et responsive. Deux rôles sont disponibles : **Admin** et **Utilisateur**.
 
-## Development server
+## 🚀 Fonctionnalités
 
-To start a local development server, run:
+- Authentification (login/register)
+- Gestion des événements (CRUD)
+- Liste et calendrier interactif des événements
+- Filtrage par date, lieu, catégorie
+- Inscriptions aux événements
+- Génération de PDF (liste d’inscrits)
+- Notifications email (nouvelles inscriptions)
+
+---
+
+## 🛠️ Technologies utilisées
+
+- **Backend** : Laravel 11 + Sanctum + JWT
+- **Frontend** : Angular 19 + Tailwind CSS + FullCalendar + jsPDF
+- **Base de données** : MySQL
+- **API** : RESTful
+
+---
+
+## ⚙️ Installation
+
+### 1. Backend (Laravel)
+
+#### Pré-requis
+
+- PHP >= 8.2
+- Composer
+- MySQL
+
+#### Étapes
 
 ```bash
+# Cloner le projet backend
+git clone https://github.com/ndongombathie/evenement.git
+cd eventBackEnd
+
+# Installer les dépendances PHP
+composer install
+
+# Installer Sanctum et JWT
+composer require laravel/sanctum
+composer require tymon/jwt-auth
+
+# Publier les fichiers de config si nécessaire
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+# Copier le fichier .env
+cp .env.example .env
+
+# Configurer la base de données dans .env
+# DB_DATABASE=sene_evens
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Générer la clé de l'application et le secret JWT
+php artisan key:generate
+php artisan jwt:secret
+
+# Créer les tables
+php artisan migrate
+
+# Démarrer le serveur backend
+php artisan serve
+```
+
+### 2. Frontend (Angular)
+
+#### Pré-requis
+
+- Node.js ≥ 18.x
+- Angular CLI
+
+#### Étapes
+
+```bash
+# Cloner le projet frontend si c'est pas encore fait
+git clone https://github.com/ndongombathie/evenement.git
+cd eventfront
+
+# Installer les dépendances Node.js
+npm install
+
+# Lancer le serveur frontend
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🔐 Authentification
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Utilise **Sanctum** et **JWT** pour sécuriser les endpoints.
+- Login/Inscription via :
+  - `POST /api/login`
+  - `POST /api/register`
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📬 Notifications & PDF
 
-```bash
-ng generate --help
-```
+- Email SMTP : Configuré via Gmail dans `.env`
+- PDF : jsPDF génère une liste d'inscrits téléchargeable pour chaque événement.
 
-## Building
+---
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## ✅ Commandes utiles
 
 ```bash
-ng test
-```
+# Backend
+php artisan migrate:fresh --seed   # Réinitialise la BDD avec des données de test
+php artisan serve                  # Lance le backend
 
-## Running end-to-end tests
+# Frontend
+ng serve                      # Lance le frontend
 
-For end-to-end (e2e) testing, run:
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📝 Auteurs
 
-## Additional Resources
+- Aliou Dramé
+- Ndongo Mbath
+- Talla Diop
+- Université Iba Der Thiam de Thiès
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
