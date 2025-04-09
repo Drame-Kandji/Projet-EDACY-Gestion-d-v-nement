@@ -16,6 +16,6 @@ export const routes: Routes = [
   {path:'connexion',component:LoginComponent},
   {path:'event/:id',component:EventDetailComponent},
   {path:'events',component:EventsComponent},
-  //{path:'calendrier',component:CalendarPageComponent}
+  {path:'calendrier',component:CalendarPageComponent}
  // {path:'/genererpdf',component:AttendeesListComponent}
 ];

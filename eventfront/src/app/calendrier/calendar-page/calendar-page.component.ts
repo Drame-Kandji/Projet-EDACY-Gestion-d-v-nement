@@ -167,28 +167,20 @@ export class CalendarPageComponent implements OnInit {
 
   getEventCategoryClass(category: string): string {
     const categoryColors: { [key: string]: string } = {
-      'Conférence': 'bg-blue-100 text-blue-800',
-      'Concert': 'bg-purple-100 text-purple-800',
-      'Atelier': 'bg-green-100 text-green-800',
-      'Exposition': 'bg-amber-100 text-amber-800',
+      'conférence': 'bg-blue-100 text-blue-800',
+      'concert': 'bg-purple-100 text-purple-800',
+      'atelier': 'bg-green-100 text-green-800',
+      'exposition': 'bg-amber-100 text-amber-800',
       'Networking': 'bg-indigo-100 text-indigo-800',
-      'Sport': 'bg-red-100 text-red-800',
-      'Formation': 'bg-teal-100 text-teal-800',
+      'sport': 'bg-red-100 text-red-800',
+      'formation': 'bg-teal-100 text-teal-800',
       'Culturel': 'bg-pink-100 text-pink-800'
     };
 
     return categoryColors[category] || 'bg-gray-100 text-gray-800';
   }
 
-  openCreateEventModal(): void {
-    this.selectedEvent = null;
-    this.isEventModalOpen = true;
-  }
-
-  openEditEventModal(event: Event): void {
-    this.selectedEvent = event;
-    this.isEventModalOpen = true;
-  }
+ 
 
   closeEventModal(): void {
     this.isEventModalOpen = false;
@@ -212,24 +204,5 @@ export class CalendarPageComponent implements OnInit {
     return undefined;
   }
 
-  deleteEvent(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      this.eventService.deleteEvent(id).subscribe({
-        next: () => {
-          this.events = this.events.filter(e => e.id !== id);
-          this.generateCalendarDays();
-          // Sélectionner à nouveau la date pour rafraîchir les événements affichés
-          if (this.selectedDate) {
-            const day = this.findDayByDate(this.selectedDate);
-            if (day) {
-              this.selectDate(day);
-            }
-          }
-        },
-        error: (error) => {
-          console.error('Erreur lors de la suppression de l\'événement', error);
-        }
-      });
-    }
-  }
+  
 }

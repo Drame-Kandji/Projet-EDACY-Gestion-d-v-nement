@@ -177,32 +177,39 @@ class EvenementController extends Controller
     }
 
 
-        public function inscrire(Request $request)
-        {
-            //return $request->all();
-            $user = User::where('email',$request->email)->first();
-            //return Evenement::find($request->id) ;
-            if (!$user) {
-                return response()->json(['message' => 'Utilisateur non authentifié'], 401);
-            }
-            $evenement = Evenement::find($request->id);
-            if (!$evenement) {
-                return response()->json(['message' => 'Événement non trouvé'], 404);
-            }
-            if (!$user->evenements->contains($evenement->id)) {
-                $user->evenements()->attach($evenement->id);
+    public function inscrire($id)
+    {
 
-                Mail::to($request->email)->send(new ConfirmationInscription($evenement, $user));
-
-                return response()->json([
-                    'message' => 'Inscription réussie à l’événement',
-                    'data'=>$user->id
-                    ]);
-            } else {
-                return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
-            }
-
+        $user = Auth::user();
+        //dd($user->email);
+        $roles = $user->roles;
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
         }
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'ID invalide'], 400);
+        }
+
+
+        $evenement = Evenement::find($id);
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement non trouvé'], 404);
+        }
+
+        if (!$user->evenements->contains($evenement->id)) {
+            //ceci n'est pas une erreur, je répéte cci n'est pas une erreur
+            $user->evenements()->attach($evenement->id);
+
+            Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
+
+
+            return response()->json(['message' => 'Inscription réussie et email envoyé']);
+        } else {
+            return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
+        }
+
+    }
+
     // Désinscription d'un utilisateur à un événement
 
     public function desinscrire($id){
@@ -222,7 +229,7 @@ class EvenementController extends Controller
         if ($user->evenements->contains($evenement->id)) {
             //ceci n'est pas une erreur, je répéte cci n'est pas une erreur
             $user->evenements()->detach($evenement->id);
-             //Mail::to($user->email)->send(new ConfirmationInscription($evenement, $user));
+
             return response()->json(['message' => 'Desinscription réussie et email envoyé']);
         } else {
             return response()->json(['message' => 'Utilisateur déjà inscrit à cet événement'], 400);
