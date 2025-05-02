@@ -2,7 +2,7 @@
 
 Application web de gestion des événements. Elle permet aux utilisateurs de s'inscrire, de créer, supprimer, modifier et de gérer des événements à travers une interface moderne et responsive. Deux rôles sont disponibles : **Admin** et **Utilisateur**.
 
-## 🚀 Fonctionnalités
+##  Fonctionnalités
 
 - Authentification (login/register)
 - Gestion des événements (CRUD)
@@ -14,7 +14,7 @@ Application web de gestion des événements. Elle permet aux utilisateurs de s'i
 
 ---
 
-## 🛠️ Technologies utilisées
+##  Technologies utilisées
 
 - **Backend** : Laravel 11 + Sanctum + JWT
 - **Frontend** : Angular 19 + Tailwind CSS + FullCalendar + jsPDF
@@ -23,7 +23,7 @@ Application web de gestion des événements. Elle permet aux utilisateurs de s'i
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ### 1. Backend (Laravel)
 
@@ -92,7 +92,7 @@ ng serve
 
 ---
 
-## 🔐 Authentification
+##  Authentification
 
 - Utilise **Sanctum** et **JWT** pour sécuriser les endpoints.
 - Login/Inscription via :
@@ -101,28 +101,20 @@ ng serve
 
 ---
 
-## 📬 Notifications & PDF
+##  Notifications & PDF
 
 - Email SMTP : Configuré via Gmail dans `.env`
 - PDF : jsPDF génère une liste d'inscrits téléchargeable pour chaque événement.
 
 ---
 
-## ✅ Commandes utiles
+##  Commandes utiles
 
 ```bash
 # Backend
 php artisan migrate:fresh --seed   # Réinitialise la BDD avec des données de test
-php artisan serve                  # Lance le backend
+php artisan serve   # Lance le backend
 
 # Frontend
-ng serve                      # Lance le frontend
-
-
----
-
-## 📝 Auteurs
-
-- Aliou Dramé
----
+ng serve    # Lance le frontend
 
