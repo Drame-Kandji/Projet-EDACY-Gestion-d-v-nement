@@ -80,7 +80,7 @@ php artisan serve
 
 ```bash
 # Cloner le projet frontend si c'est pas encore fait
-git https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
+git clone https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
 cd eventfront
 
 # Installer les dépendances Node.js

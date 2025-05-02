@@ -1,6 +1,6 @@
 # Event Manager
 
-Application web de gestion des événements. Elle permet aux utilisateurs de s'inscrire, de créer et de gérer des événements à travers une interface moderne et responsive. Deux rôles sont disponibles : **Admin** et **Utilisateur**.
+Application web de gestion des événements. Elle permet aux utilisateurs de s'inscrire, de créer, modifier, supprimer et de gérer des événements à travers une interface moderne et responsive. Deux rôles sont disponibles : **Admin** et **Utilisateur**.
 
 ## 🚀 Fonctionnalités
 
@@ -37,7 +37,7 @@ Application web de gestion des événements. Elle permet aux utilisateurs de s'i
 
 ```bash
 # Cloner le projet backend
-git clone https://github.com/ndongombathie/evenement.git
+git clone https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
 cd eventBackEnd
 
 # Installer les dépendances PHP
@@ -80,7 +80,7 @@ php artisan serve
 
 ```bash
 # Cloner le projet frontend si c'est pas encore fait
-git clone https://github.com/ndongombathie/evenement.git
+git https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
 cd eventfront
 
 # Installer les dépendances Node.js
