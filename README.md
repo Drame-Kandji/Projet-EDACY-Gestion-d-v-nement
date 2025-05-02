@@ -124,6 +124,6 @@ ng serve                      # Lance le frontend
 ## 📝 Auteurs
 
 - Aliou Dramé
-- Université Iba Der Thiam de Thiès
+- Ndongo Mbath
 ---
 
