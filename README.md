@@ -124,6 +124,5 @@ ng serve                      # Lance le frontend
 ## 📝 Auteurs
 
 - Aliou Dramé
-- Ndongo Mbath
 ---
 
