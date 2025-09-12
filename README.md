@@ -37,7 +37,7 @@ Application web de gestion des événements. Elle permet aux utilisateurs de s'i
 
 ```bash
 # Cloner le projet backend
-git clone https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
+git clone https://github.com/Drame-Kandji/H24Code-Gestion-d-v-nement.git
 cd eventBackEnd
 
 # Installer les dépendances PHP
@@ -80,7 +80,7 @@ php artisan serve
 
 ```bash
 # Cloner le projet frontend si c'est pas encore fait
-git clone https://github.com/Drame-Kandji/Projet-EDACY-Gestion-d-v-nement.git
+git clone https://github.com/Drame-Kandji/H24Code-Gestion-d-v-nement.git
 cd eventfront
 
 # Installer les dépendances Node.js
